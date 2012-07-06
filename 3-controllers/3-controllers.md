@@ -61,7 +61,7 @@ This is also the "designated initializer" of `UIViewController`s. Whenever you w
 
 Now that that's out of the way, `rake` and check it out. You should see something like this:
 
-![derp][http://hello]
+![derp][images/1.png]
 
 Pretty modest. Let's make one small change to our controller:
 
@@ -86,6 +86,7 @@ We use the `CGRectZero` frame when we initialize it because we don't know the ex
 `rake` again for a much pleasant-looking app. It doesn't really do...anything right now, but in the next chapter we'll make it do...stuff.
 
 What did we learn?
+
 1. The iOS SDK uses the Model-View-Controller paradigm.
 2. `UIViewController` makes up the controller part of that, and it should be subclassed for customization.
 3. Use `viewDidLoad` when to setup your controller and *don't forget to call *super*.
