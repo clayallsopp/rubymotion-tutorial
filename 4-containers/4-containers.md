@@ -108,17 +108,23 @@ Kind of...underwhelming, I guess. Let's start to pretty it up by adding an icon 
 
 Much like `navigationItem`, every `UIViewController` has a `tabBarItem` property, which takes a `UITabBarItem`. We can use this object to customize the icon, title, and other appearance options of our controller's tab.
 
-In `viewDidLoad`, go ahead and create such an object:
+Override `initWithNibName:bundle:` in TapController, and go ahead and create such an object:
 
 ```ruby
   ...
-  self.tabBarItem = UITabBarItem.alloc.initWithTabBarSystemItem(UITabBarSystemItemFavorites, tag: 1)
+  def initWithNibName(name, bundle: bundle)
+    super
+    self.tabBarItem = UITabBarItem.alloc.initWithTabBarSystemItem(UITabBarSystemItemFavorites, tag: 1)
+    self
+  end
   ...
 ```
 
 This is one initializer for `UITabBarItem`; you can also use `initWithTitle:image:tag:` if you want to supply a custom image and title. If you do use a custom image, it needs to be a 30x30 icon.
 
 `initWithTabBarSystemItem` makes our lives a little easier for demonstrating a tab icon, but it will force the title to correspond to the system's image (in this case, "Favorites").
+
+Why do we put it in `initWithNibName`? Because we want it to create the `tabBarItem` as soon as the controller exists, regardless of whether or not it's `view` exists. If you put it in `viewDidLoad`, then it might not get created when the app launches (tab bar controllers only load each child controller when its first accessed by the user).
 
 One more thing! Let's make another tab. We don't really have anything to do in this other tab yet, so let's just make an empty `UIViewController` with a different background color in `AppDelegate`:
 
