@@ -22,7 +22,7 @@ def application(application, didFinishLaunchingWithOptions:launchOptions)
 
   @blue_view = UIView.alloc.initWithFrame(CGRectMake(10, 10, 100, 100))
   @blue_view.backgroundColor = UIColor.blueColor
-  @window.addSubview(blue_view)
+  @window.addSubview(@blue_view)
 
   true
 end
@@ -40,7 +40,7 @@ Run this (`rake`, remember?) and see our...blue box. Let's make it more exciting
   ...
   @blue_view = UIView.alloc.initWithFrame(CGRectMake(10, 10, 100, 100))
   @blue_view.backgroundColor = UIColor.blueColor
-  @window.addSubview(blue_view)
+  @window.addSubview(@blue_view)
 
   @green_view = UIView.alloc.initWithFrame(CGRectMake(30, 30, 40, 40))
   @green_view.backgroundColor = UIColor.greenColor
@@ -64,7 +64,7 @@ Just for fun, let's play with the `REPL`. The terminal where you ran `rake` shou
 => #<UIView>
 ```
 
-What did we do there? Well `UIApplication.sharedApplication` gives us the object the system uses to describe our application. There will only ever be one of these. Like I said earlier, it's been configured to use our delegate, which is found (conveniently, I know) with `.delegate`. Once we attain that, we simple use the Ruby `instance_variable_get` to retrieve our view.
+What did we do there? Well `UIApplication.sharedApplication` gives us the object the system uses to describe our application. There will only ever be one of these. Like I said earlier, it's been configured to use our delegate, which is found (conveniently, I know) with `.delegate`. Once we attain that, we simply use the Ruby `instance_variable_get` to retrieve our view.
 
 We can confirm that the view has one subview with `blue_view.subviews.count`. Let's grab our `red_view` and do something maniacal: remove it.
 
@@ -74,14 +74,15 @@ We can confirm that the view has one subview with `blue_view.subviews.count`. Le
 > red_view = blue_view.subviews[0]
 => #<UIView>
 > red_view.removeFromSuperview
-=> nil
+=> #<UIView>
 ```
 
-Whoa there Neo, it disappeared. The `removeFromSuperview` method is how a view can remove itself from the screen and it's parent view's `subviews` (you can confirm this by checking `blue_view.subviews.count` again).
+"Whoa" there Neo, it disappeared. The `removeFromSuperview` method is how a view can remove itself from the screen and it's parent view's `subviews` (you can confirm this by checking `blue_view.subviews.count` again).
 
 This wasn't a very lengthy example, but it covers the core concepts of views: they have frames and they have subviews. This was simple, but as you'll see they get much more complicated. Thus, we need some better infrastructure for dealing with them.
 
 Let's recap:
+
 1. Everything on the screen is a `UIView`.
 2. The base view of your app is an instance of `UIWIndow`, of which everything is a child or descendent view. Create this in your delegate.
 3. Views have subviews, added with `UIView#addSubview`. Successive subviews stack on top of each other visually.
