@@ -34,6 +34,8 @@ So we create a window, then we create a new view and add it as a subview to the 
 
 Also shown is `UIColor`, which is how we play with...colors. It has some obvious defaults (`blueColor`, `redColor`, etc), but can also be used to create arbitrary tints.
 
+**FULL DISCLOSURE**: adding lone `UIView`s directly to the `UIWindow` is generally not a great idea and is frowned upon, but it's a nice way to learn.
+
 Run this (`rake`, remember?) and see our...blue box. Let's make it more exciting by...adding more boxes! Like so:
 
 ```
