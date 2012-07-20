@@ -23,6 +23,12 @@ table.contents {
     background-color: #ddd;
 }
 
+@media (max-width: 786px) {
+  #chapter-nav {
+    display: none;
+  }
+}
+
 nav {
     height: 100%;
     overflow-y: scroll;
