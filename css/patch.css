@@ -61,7 +61,16 @@ table#premium tbody tr:hover th {
 }
 
 #social #facebook-like {
-    height: 90px;
+    border:none;
+    overflow:hidden;
+    width:480px;
+    height:35px;
+}
+
+@media (max-width: 520px) {
+  #social #facebook-like {
+    width: 100%;
+  }
 }
 
 #social {
