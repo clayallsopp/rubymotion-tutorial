@@ -20,9 +20,26 @@
     left: 5px;
 }
 
-#about-me-header iframe.twitter-follow-button {
-    float: right;
+@media (max-width: 459px) {
+    #about-me-header iframe.twitter-follow-button {
+        margin: 0 auto;
+        display: block;
+    }
+    #about-me-header {
+        text-align: center;
+    }
 }
+
+
+@media (min-width: 460px) {
+    #about-me-header iframe.twitter-follow-button {
+        float: right;
+        display: inherit;
+        margin: 0 0;
+    }
+}
+
+
 
 .about {
     font-size:1rem;
