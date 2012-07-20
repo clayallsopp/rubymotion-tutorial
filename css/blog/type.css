@@ -1,0 +1,54 @@
+/*
+ ______     ______     __   __     _____     ______     __    __
+/\  ___\   /\  __ \   /\ "-.\ \   /\  __-.  /\  __ \   /\ "-./  \
+\ \ \____  \ \ \/\ \  \ \ \-.  \  \ \ \/\ \ \ \ \/\ \  \ \ \-./\ \
+ \ \_____\  \ \_____\  \ \_\\"\_\  \ \____-  \ \_____\  \ \_\ \ \_\
+  \/_____/   \/_____/   \/_/ \/_/   \/____/   \/_____/   \/_/  \/_/
+
+© MIT
+Philip Harrison
+https://github.com/harrison/condom.css */
+
+/* -------------------------------------------------------------------------  */
+
+h1, h2, h3, h4, h5                              { position: relative; }
+h1, h2, h3                                      { margin-bottom: 24px; margin-bottom: 2.4rem; color: #000; }
+h4, h5, h6                                      { margin-bottom: 0; }
+
+h1                                              { font-size: 49px; line-height: 72px; font-size: 4.9rem; line-height: 7.2rem; 
+                                                  }
+h2                                              { font-size: 39px; line-height: 48px; font-size: 3.9rem; line-height: 4.8rem; 
+                                                  margin-top: 72px; top: 4px; margin-top: 7.2rem; top: .4rem; }
+h3                                              { font-size: 35px; line-height: 48px; font-size: 3.5rem; line-height: 4.8rem; 
+                                                  margin-top: 48px; top: 5px; margin-top: 4.8rem; top: .5rem; }
+h4                                              { font-size: 27px; line-height: 48px; font-size: 2.7rem; line-height: 4.8rem; 
+                                                  margin-top: 24px; top: 8px; margin-top: 2.4rem; top: .8rem; }
+h5                                              { font-size: 21px; line-height: 24px; font-size: 2.1rem; line-height: 2.4rem; 
+                                                  margin-top: 24px; top: -2px; margin-top: 2.4rem; top: -.2rem; }
+h6                                              { font-size: 16px; margin-top:  24px; font-size: 1.6rem; margin-top:  2.4rem; }
+
+/* -------------------------------------------------------------------------  */
+
+p                                               { margin: 0 0 24px 0; margin-bottom: 2.4rem; font-size: 1.6rem; line-height: 2.4rem; }
+p:only-child                                    { margin: 0; }
+
+/* -------------------------------------------------------------------------  */
+
+sub, sup                                        { font-size: 11px; font-size: 1.1rem; line-height: 0; 
+                                                  position: relative; vertical-align: baseline; }
+sup                                             { top: -0.5em; }
+sub                                             { bottom: -0.25em; }
+pre, code, kbd, samp                            { font-family: monospace, serif; }
+pre                                             { margin: 24px 48px; margin: 2.4rem 4.8rem; white-space: pre; 
+                                                  white-space: pre-wrap; word-wrap: break-word; }
+small                                           { font-size: 8px; font-size: .8rem; }
+blockquote 				                              { font-size: 35px; font-size: 3rem; 
+                                                  line-height: 48px; line-height: 4.8rem;
+                                                  color: #777; font-style: italic; 
+                                                  margin: 24px 0 24px 0; margin: 2.4rem 0 2.4rem 0;
+                                                  padding: 0 0 0 72px; padding: 0 0 0 7.2rem; }
+blockquote.small                                { font-size: 18px; font-size: 1.8rem; line-height: 24px; line-height: 2.4rem; }
+
+/* -------------------------------------------------------------------------  */
+.code {font-family: 'Bitstream Vera Sans Mono','Courier',monospace;}
+.strike {text-decoration: line-through;}

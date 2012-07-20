@@ -1,0 +1,46 @@
+body, select, input, button, textarea { font-family: Georgia, serif; }
+nav                                   { font-family: Helvetica, sans-serif; }
+section.row                           { max-width: 65%;  }
+
+@media only screen and (max-width: 640px) {
+  section.row {
+    max-width: 100%;
+  }
+} 
+@media only screen and (min-width: 900px) {
+  html {
+    font-size: 78.125%; /* == 20px base font-size */ 
+  }
+} 
+
+@media only screen and (min-width: 1200px) {
+  html {
+    font-size: 85.75%; /* == 24px base font-size */ 
+  }
+} 
+
+/*
+@media only screen and (min-width: 1600px) {
+  #footer {
+    display: none;
+  }
+  section.row {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 50px 0;
+    height: 100%;
+    max-width: 85%;
+    -webkit-column-count: 2;
+    -webkit-column-width: max-width: 900px;
+    -webkit-column-gap: 100px;
+    -moz-column-count: 2;
+    -moz-column-width: max-width: 900px;
+    -moz-column-gap: 100px;
+    column-count: 2;
+    column-width: max-width: 900px;
+    column-gap: 100px;
+  }
+} 
+*/

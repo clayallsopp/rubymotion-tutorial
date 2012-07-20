@@ -1,0 +1,74 @@
+#fork-me {
+    position: absolute; /* options: fixed, absolute */
+    top: 0;
+    right: 0;
+    z-index: 9999;
+    width: 140px;
+    height: 140px;
+    text-indent: -9999px;
+    background-image: url("https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 2) {
+    #fork-me {
+        background-image: url("https://github.com/philwareham/github-ribbons-retina/raw/master/fork-me@2x.png") !important;
+        -webkit-background-size: 140px 140px;
+    }
+}
+
+@media (max-width: 768px) {
+  #fork-me {
+    display: none;
+  }
+}
+
+ul.contents {
+    font-size: 1.25rem;
+    padding: 0 0;
+    margin-bottom: 20px;
+}
+
+ul.contents li {
+    height: 60px;
+    border-bottom: 1px solid #ddd;
+}
+
+ul.contents li a {
+    height: 100%;
+    padding: 0 10px;
+    margin: 0 0;
+}
+
+ul.contents li div {
+    padding-top: 20px;
+}
+
+ul.contents li i.icon-chevron-right {
+    float:right;
+    position: relative;
+    top: 3px;
+}
+
+table#premium tbody tr:hover td,
+table#premium tbody tr:hover th {
+  background-color: #e9e9e9;
+}
+
+#social .twitter-share-button {
+    position: relative;
+    top: -9px;
+    margin-right:15px;
+}
+
+#social #facebook-like {
+    height: 90px;
+}
+
+#social {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#spread {
+    margin-left: 10px;
+}

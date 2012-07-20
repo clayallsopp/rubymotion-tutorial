@@ -1,0 +1,41 @@
+---
+layout: splash
+extra_css: index.css
+categories:
+- chapters
+---
+
+<div class="hero-unit">
+  <h1 class="centered" id="the-rubymotion">RubyMotion Tutorial</h1><p class="centered">Make iOS Apps With Ruby</p>
+  <h1 class="centered"><small>by Clay Allsopp</small></h1>
+</div>
+<p class="about"><a href="http://rubymotion.com" target="_blank">RubyMotion</a> is a tool that allows you to <strong>write iOS apps in Ruby</strong>. Apple-platform software has historically been limited to using Objective-C, a great but otherwise niche language. RubyMotion allows a completely native and performant alternative: Ruby.</p>
+<p class="about">The <strong>RubyMotion Tutorial</strong> will teach you the essential topics of the iOS SDK using idiomatic Ruby whenever possible. It doesn't cover everything, but it will get you on the path to making elegant apps as quickly as possible.</p>
+<hr />
+<h2>Table Of Contents</h2>
+<ul class="contents nav nav-list">
+    {% for post in site.categories.chapters reversed %}
+      <li>
+        <a href="{{post.url}}">
+          <div><span>{% if post.full_title %} {{ post.full_title }} {% else %} {{ post.title }} {% endif %}</span><i class="icon-chevron-right"></i></div>
+        </a>
+      </li>
+    {% endfor %}
+</ul>
+
+<div class="well">
+  <h2 id="about-me-header">About The Author <a href="https://twitter.com/clayallsopp" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @clayallsopp</a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></h2>
+
+  <p>Clay Allsopp is a mobile hacker. He is the creator several <a href="https://github.com/clayallsopp/formotion" target="_blank">popular</a> <a href="https://github.com/clayallsopp/remote_model" target="_blank">RubyMotion</a> <a href="https://github.com/clayallsopp/Routable" target="_blank">projects</a> and is also a maintainer of <a href="http://bubblewrap.io/" target="_blank">BubbleWrap</a>, the most widely used RubyMotion library. A <a href="http://20under20.org" target="_blank">Thiel Fellow</a>, Clay was previously an early member of the <a href="http://discovercircle.com" target="_blank">Circle</a> team, contributing to their gorgeous iOS and Android apps.</p>
+  <p>But all that stuff aside, I wrote this because I believe RubyMotion is a great way to get started writing iOS software. It's not for everyone, but it definitely lowers the barrier to entry for many on-the-fence developers. If that's you, I hope you read this and take the dive.</p>
+</div>
+<hr />
+  <h2>Like it?<small id="spread"> Spread the word</small></h2>
+  <div id="social">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:480px; height:35px;" allowTransparency="true"></iframe>
+  </div>
+  <hr />
