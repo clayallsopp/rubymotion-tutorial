@@ -14,6 +14,12 @@
     font-size: 1.5rem;
 }
 
+#by-me iframe.twitter-follow-button {
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+
 #about-me-header iframe.twitter-follow-button {
     float: right;
 }
