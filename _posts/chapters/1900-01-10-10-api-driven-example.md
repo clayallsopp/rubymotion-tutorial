@@ -1,7 +1,7 @@
 ---
 layout: default
-title: API App Example
-full_title: API-Driven Apps
+title: API Driven Example
+full_title: An API-Driven Example
 categories:
 - chapters
 ---
@@ -12,7 +12,9 @@ We're going to build a front-end for the [Colr JSON API][colr]. Our users can ty
 
 Let's talk about high-level architecture. We need two controllers: one for search, and one for a color. These should be wrapped inside a `UINavigationController`, our top level controller. We're also going to need some models: `Color` and `Tag`. I'm going to be honest: our app won't be the next top post on Dribbble, but it will work.
 
-`motion create Colr` to get our project set up, and add `require 'bubble-wrap'` to our `Rakefile` as shown a few paragraphs up. We're going to do a proper setup and create some folders *inside* `./app`: make `./app/models/` and `./app/controllers`.
+## Setup
+
+`motion create Colr` to get our project set up, and add `require 'bubble-wrap'` to our `Rakefile`. We're going to do a proper setup and create some folders *inside* `./app`: make `./app/models/` and `./app/controllers`.
 
 ## Models
 
