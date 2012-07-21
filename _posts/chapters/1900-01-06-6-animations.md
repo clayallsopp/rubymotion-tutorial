@@ -9,7 +9,7 @@ categories:
 
 When you ask users about the biggest differences between iOS and other mobile operating systems, animations will definitely be one of the top answers. There are fades, flips, spins, bounces, and curls abound in Apple's apps.
 
-Some of these are promintent in the default UI elements (`UINavigationController`, `UITableView`, etc), but what's really great is that they're all built upon the very same APIs you and I use. Literally every `UIView` is animatable with only one line of code. It's unbelievably great.
+Some of these are prominent in the default UI elements (`UINavigationController`, `UITableView`, etc), but what's really great is that they're all built upon the very same APIs you and I use. Literally every `UIView` is animatable with only one line of code. It's unbelievably great.
 
 So let's have some fun. We're going to move a box around the screen. Trust me, the code is as simple as it sounds (which is a good thing!).
 
