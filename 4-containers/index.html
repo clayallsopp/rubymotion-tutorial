@@ -1,0 +1,288 @@
+
+<!doctype html>
+  <head>
+    <meta name="description" content="The RubyMotion Tutorial" />
+    <meta charset=utf-8 />
+    <title> Containers |  RubyMotion Tutorial</title>
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='/css/bootstrap.min.css'>
+    <link rel=stylesheet href='/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='/css/blog/pygments.css'>
+    <link rel=stylesheet href='/css/patch.css'>
+    <link rel=stylesheet href='/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_11">Containers</h1>
+
+<p>Now that we have a big white screen on our hands, let&#39;s dress it up.</p>
+
+<p>If you&#39;ve used more than a handful of iOS apps, you&#39;ve undoubtedly noticed some visual similarities. Primarily, many apps a black bottom bar with tabs and a blue top bar with a title. These are the standard &quot;containers&quot; in iOS, known as <code>UITabBarController</code> and <code>UINavigationController</code> respectively. We&#39;re going to play with them.</p>
+
+<p>These containers are <code>UIViewController</code> subclasses which actually manage other <code>UIViewController</code>s. Kind of wild, right? They have a <code>view</code> just like regular controllers, to which these &quot;children&quot; controllers&#39; views are added as subviews. Thankfully, we never really have to worry about <em>how</em> that works, as these container controllers have pleasant APIs that deal with controllers, not views.</p>
+
+<h2 id="toc_12">UINavigationController</h2>
+
+<p>Let&#39;s start with the most common container, <code>UINavigationController</code>. It manages its children controllers as a stack, pushing and popping them along a visually horizontal path. Mail.app uses one for its flow from Accounts -&gt; An Account -&gt; Inbox -&gt; Message. The navigation controller is really nice in that automatically it&#39;ll handle the back button for you; all you need to do is push and pop controllers.</p>
+
+<p><img src="images/nav_bar.png" alt="Navigation controller in Mail.app"></p>
+
+<p>In <code>AppDelegate</code>, change our <code>rootViewController</code> assignment to use a <code>UINavigationController</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="n">controller</span> <span class="o">=</span> <span class="no">TapController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="no">UINavigationController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithRootViewController</span><span class="p">(</span><span class="n">controller</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p><code>initWithRootViewController</code> will take the controller passed to it and start the stack with it.</p>
+
+<p>And make one more change before we run the app, in <code>TapController</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@label</span>
+
+  <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Tap&quot;</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p><code>rake</code> and check out our slightly prettier app:</p>
+
+<p><img src="images/1.png" alt="Navigation controller"></p>
+
+<p>Sweet. Now let&#39;s make it do something. We&#39;re going to add a navigation bar button that pushes more instances of <code>TapController</code>s onto the navigation controller stack.</p>
+
+<p>You can actually put buttons in the navigation bar at the top of the screen. For example, Mail.app does this for the &quot;Edit&quot; button. These buttons are instances of <code>UIBarButtonItem</code>, which has loads of configuration options (want to use text? an image? a system icon? all sorts of fun stuff).</p>
+
+<p>In <code>TapsController</code>, add the button in <code>viewDidLoad</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">viewDidLoad</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Tap&quot;</span>
+
+  <span class="n">rightButton</span> <span class="o">=</span> <span class="no">UIBarButtonItem</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithTitle</span><span class="p">(</span><span class="s2">&quot;Push&quot;</span><span class="p">,</span> <span class="n">style</span><span class="p">:</span> <span class="no">UIBarButtonItemStyleBordered</span><span class="p">,</span> <span class="n">target</span><span class="ss">:self</span><span class="p">,</span> <span class="n">action</span><span class="ss">:&#39;push&#39;</span><span class="p">)</span>
+  <span class="nb">self</span><span class="o">.</span><span class="n">navigationItem</span><span class="o">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="n">rightButton</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Should be pretty plain what this does. We create a <code>UIBarButtonItem</code> instance with a title and a style. The <code>style</code> property determines how our button looks (either plain, bordered, or &quot;done&quot;; play around to see the differences). We then set it as our controller&#39;s <code>navigationItem</code>&#39;s <code>rightBarButtonItem</code>. Every <code>UIViewController</code> has a <code>navigationItem</code>, which is how we access the information displayed in the blue bar at the top. (NOTE that <code>UINavigationItem</code> <em>isn&#39;t</em> a <code>UIView</code>! so you can&#39;t arbitrarily add subviews to it).</p>
+
+<p>What&#39;s the <code>target</code>/<code>action</code> business? Well, this is where the original Objective-C SDK leaks into Ruby-land =(. Up until very recently, you couldn&#39;t pass anonymous functions as callbacks in Objecive-C; as an alternative, APIs would pass objects and the name of a function to call on that object. We <code>do</code> this operation in Ruby with blocks and lambdas, but sadly the older iOS APIs show their age.</p>
+
+<p>Anyway, <code>target</code> is the object you want to call the <code>action</code> function on. Let&#39;s implement it in our <code>TapController</code> so you get a better idea:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="k">def</span> <span class="nf">push</span>
+    <span class="n">new_controller</span> <span class="o">=</span> <span class="no">TapController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">navigationController</span><span class="o">.</span><span class="n">pushViewController</span><span class="p">(</span><span class="n">new_controller</span><span class="p">,</span> <span class="n">animated</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>Make more sense now? When the user taps the bar button, <code>push</code> gets called on the <code>target</code>, which in this case is our controller.</p>
+
+<p>In addition to <code>navigationItem</code>, <code>UIViewController</code>s also have a propery for their <code>navigationController</code>, if available. On the nav controller we call <code>pushViewController</code> which pushes the passed controller onto the stack. By default, the navigation controller will also show a back button which handles popping the current controller for us (normally we call <code>popViewControllerAnimated:</code> on the navigation controller). Kind of neat, right?</p>
+
+<p>Let&#39;s have one last bit of fun before we run the app. Have the controller&#39;s title reflect its position in the navigation stack, like so:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Tap (</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">navigationController</span><span class="o">.</span><span class="n">viewControllers</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Now <code>rake</code> and observe our dynamic controllers!</p>
+
+<p><img src="images/2.png" alt="pushable controllers"></p>
+
+<p>Now, I said we&#39;d cover <code>UITabController</code>s too, so let&#39;s get to it.</p>
+
+<h2 id="toc_13">UITabBarController</h2>
+
+<p><img src="images/tab_bar.png" alt="Navigation controller in Mail.app"></p>
+
+<p>Tab controllers are a lot like <code>UINavigationController</code> and other container controllers: it has a list of <code>viewControllers</code> which are presented within the container&#39;s &quot;chrome&quot; (the black bar). However, unlike the other containers, <code>UITabBarController</code>s are only supposed act as the <code>rootViewController</code> of the window (i.e. you shouldn&#39;t push a tab bar controller inside a navigation controller).</p>
+
+<p>In <code>AppDelegate</code>, let&#39;s make a small change:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="n">controller</span> <span class="o">=</span> <span class="no">TapController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="n">nav_controller</span> <span class="o">=</span> <span class="no">UINavigationController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithRootViewController</span><span class="p">(</span><span class="n">controller</span><span class="p">)</span>
+
+  <span class="n">tab_controller</span> <span class="o">=</span> <span class="no">UITabBarController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="n">tab_controller</span><span class="o">.</span><span class="n">viewControllers</span> <span class="o">=</span> <span class="o">[</span><span class="n">nav_controller</span><span class="o">]</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">tab_controller</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>Unlike other code examples, this doesn&#39;t have anything new! We create the <code>UITabBarController</code> like a normal <code>UIViewController</code> and set its <code>viewControllers</code> to an array with our navigation controller.</p>
+
+<p><code>rake</code> and check it out!</p>
+
+<p><img src="images/3.png" alt="tab bar controller"></p>
+
+<p>Kind of...underwhelming, I guess. Let&#39;s start to pretty it up by adding an icon to our tab bar.</p>
+
+<p>Much like <code>navigationItem</code>, every <code>UIViewController</code> has a <code>tabBarItem</code> property, which accepts an instance of <code>UITabBarItem</code>. We can use this object to customize the icon, title, and other appearance options of our controller&#39;s tab.</p>
+
+<p>Override <code>initWithNibName:bundle:</code> in TapController, and go ahead and create such an object:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="k">def</span> <span class="nf">initWithNibName</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="n">bundle</span><span class="p">)</span>
+    <span class="k">super</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">tabBarItem</span> <span class="o">=</span> <span class="no">UITabBarItem</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithTabBarSystemItem</span><span class="p">(</span><span class="no">UITabBarSystemItemFavorites</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>This is one initializer for <code>UITabBarItem</code>; you can also use <code>initWithTitle:image:tag:</code> if you want to supply a custom image and title. If you do use a custom image, it needs to be a 30x30 black and transparent icon.</p>
+
+<p><code>initWithTabBarSystemItem:</code> makes our lives a little easier for demonstrating a tab icon, but it will force the title to correspond to the system&#39;s image (in this case, &quot;Favorites&quot;).</p>
+
+<p>Why do we put it in <code>initWithNibName:bundle:</code>? Because we want it to create the <code>tabBarItem</code> as soon as the controller exists, regardless of whether or not its <code>view</code> exists. If you put it in <code>viewDidLoad</code>, then it might not get created when the app launches (tab bar controllers only load each child controller when its first accessed by the user).</p>
+
+<p>One more thing! Let&#39;s make another tab. We don&#39;t really have anything to do in this other tab yet, so let&#39;s just make an empty <code>UIViewController</code> with a different background color in <code>AppDelegate</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="n">other_controller</span> <span class="o">=</span> <span class="no">UIViewController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="n">other_controller</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Other&quot;</span>
+  <span class="n">other_controller</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">purpleColor</span>
+
+  <span class="n">tab_controller</span> <span class="o">=</span> <span class="no">UITabBarController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="n">tab_controller</span><span class="o">.</span><span class="n">viewControllers</span> <span class="o">=</span> <span class="o">[</span><span class="n">nav_controller</span><span class="p">,</span> <span class="n">other_controller</span><span class="o">]</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">tab_controller</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p><code>rake</code> and voila! A whole bunch of container controllers! They don&#39;t do a whole lot, but you can easily see how these few classes form the building blocks of 80% of iOS apps.</p>
+
+<p><img src="images/4.png" alt="multiple tabs"></p>
+
+<h2 id="toc_14">Subway Up</h2>
+
+<p>Let&#39;s rundown what we covered:</p>
+
+<ul>
+<li>The iOS SDK uses <code>UINavigationController</code>s and <code>UITabBarController</code>s for containing &quot;child&quot; view controllers.</li>
+<li><code>UINavigationController</code> uses &#39;pushViewController:animated:&#39; and &#39;popViewControllerAnimated:&#39; to control the stack.</li>
+<li>Use <code>controller.navigationItem</code> to change the buttons and other options of the top blue bar for a controller.</li>
+<li><code>UITabBarController</code> uses <code>viewControllers=</code> to control its children; note that <code>UITabBarController</code> should <em>only</em> be used as the <code>rootViewController</code> of a window.</li>
+<li>Use <code>controller.tabBarItem</code> to change the tab icon and title displayed for that controller.</li>
+</ul>
+
+<p><a href="/5-tables">Simply walk to Mordor/the next chapter to learn about Tables!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>

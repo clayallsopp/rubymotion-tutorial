@@ -1,0 +1,167 @@
+
+<!doctype html>
+  <head>
+    <meta name="description" content="The RubyMotion Tutorial" />
+    <meta charset=utf-8 />
+    <title> HTTP |  RubyMotion Tutorial</title>
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='/css/bootstrap.min.css'>
+    <link rel=stylesheet href='/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='/css/blog/pygments.css'>
+    <link rel=stylesheet href='/css/patch.css'>
+    <link rel=stylesheet href='/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_28">An Introduction to HTTP</h1>
+
+<p>We&#39;ve covered the building blocks of UI on iOS, but most of the time we want to populate our interface with some data from a server. The Apple-perscribed method of doing this is to use <code>NSURLConnection</code>, which is a very powerful but verbose class for sending HTTP requests; instead, we&#39;re going to use a new-fangled RubyMotion library called <code>BubbleWrap</code>.</p>
+
+<h2 id="toc_29">BubbleWrap It Up</h2>
+
+<p>As we mentioned earlier, <a href="http://bubblewrap.io/">BubbleWrap</a> is a collection of idiomatic Ruby wrappers for the iOS SDK. If you haven&#39;t noticed, a lot of Apple&#39;s APIs use a system of calling established methods on a callback object. Thus, many of BubbleWrap&#39;s wrappers are just moving those callback methods into <code>lambda</code>s and <code>block</code>s. The <code>BubbleWrap::HTTP</code> wrapper we&#39;re going to use is an example of that.</p>
+
+<p>Remember to add the requirement in your <code>Rakefile</code> so you&#39;re good to go:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;bubble-wrap&#39;</span>
+
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>The <code>BubbleWrap::HTTP</code> library uses functions for each HTTP request method: <code>HTTP.get</code>, <code>HTTP.post</code>, <code>HTTP.put</code>, etc. Each method takes as arguments a string URL, an options hash, and a callback block for when the request finishes. Here are some short and sweet examples:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="no">BubbleWrap</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://google.com&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+  <span class="nb">p</span> <span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">to_str</span>
+<span class="k">end</span>
+
+<span class="c1"># BW is alias for BubbleWrap</span>
+<span class="no">BW</span><span class="ss">:HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://www.bing.com/search&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="p">{</span><span class="n">q</span><span class="p">:</span> <span class="s2">&quot;some query&quot;</span><span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+  <span class="c1"># sends request to http://www.bing.com/search?q=some+query</span>
+<span class="k">end</span>
+
+<span class="no">BW</span><span class="ss">:HTTP</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;https://graph.facebook.com/123123123/comments&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="p">{</span><span class="n">message</span><span class="p">:</span> <span class="s2">&quot;This is a comment&quot;</span><span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+  <span class="c1"># sends request to https://graph.facebook.com/123123123/comments</span>
+  <span class="c1"># with body params `message=This is a comment`</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Looks pretty nice, right? We can add more information to our requests (like files, headers, HTTP auth credentials), but the APIs we&#39;re going to play with just use GET and POSTs. (you can check the full <a href="https://github.com/rubymotion/BubbleWrap/blob/master/motion/http.rb">HTTP documentation</a> for details)</p>
+
+<p>Wait a second, what are we actually going to make?</p>
+
+<p><a href="/10-api-driven-example">Get ready for an example on how to build an API-driven App!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>

@@ -1,0 +1,392 @@
+
+<!doctype html>
+  <head>
+    <meta name="description" content="The RubyMotion Tutorial" />
+    <meta charset=utf-8 />
+    <title> Models |  RubyMotion Tutorial</title>
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='/css/bootstrap.min.css'>
+    <link rel=stylesheet href='/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='/css/blog/pygments.css'>
+    <link rel=stylesheet href='/css/patch.css'>
+    <link rel=stylesheet href='/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_19">Models</h1>
+
+<p>We&#39;ve covered views and controllers, but where&#39;s the love for the <strong>M</strong> in the MVC equation? Well, wait no more, because we&#39;re going to dive into models. We&#39;ve written a lot of code for the <strong>VC</strong> parts already, but in practice your models should actually be the &quot;fattest&quot; of the three.</p>
+
+<p>In RubyMotion, there are two big components to models: CoreData and...everything else. CoreData is an ORM of sorts for iOS, sort of like ActiveRecord in Rails-land. It&#39;s an incredibly powerful framework but it deserves a chapter onto its own. We&#39;re going to be covering &quot;everything else&quot; important in RubyMotion, so let&#39;s get to it.</p>
+
+<h2 id="toc_20">Model-T</h2>
+
+<p>Models are plain-old Ruby objects. We can use the normal Ruby <code>attr_[accessor/reader/writer]</code> functions to declare methods which map to instance variables, which is all you really need sometimes. Take a basic <code>User</code> object for example:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:id</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:email</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Now we can manipulate objects like so:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+<span class="vi">@user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Clay&quot;</span>
+<span class="vi">@user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;clay@mail.com&quot;</span>
+</code></pre>
+</div>
+
+<p>That&#39;s cool, but if we&#39;re dealing with some kind of remote API we&#39;re probably going to be handed some data from which to parse this <code>User</code>. There are a number of ways to do this, but here&#39;s my personal favorite:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">User</span>
+  <span class="no">PROPERTIES</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="o">]</span>
+  <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">prop</span><span class="o">|</span>
+    <span class="kp">attr_accessor</span> <span class="n">prop</span>
+  <span class="p">}</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="n">attributes</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2">=&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">member?</span> <span class="n">key</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>So now we can do a neat trick like this:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="n">server_hash</span> <span class="o">=</span> <span class="p">{</span> <span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Clay&quot;</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="s2">&quot;my@email.com&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="mi">1000</span> <span class="p">}</span>
+<span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">server_hash</span><span class="p">)</span>
+<span class="vi">@user</span><span class="o">.</span><span class="n">name</span>
+<span class="o">=&gt;</span> <span class="no">Clay</span>
+</code></pre>
+</div>
+
+<p>This style also lets us add more properties with ease by simply extending the <code>PROPERTIES</code> constant. It&#39;s also useful if we ever need to iterate through the attributes of our models, such as when we...I don&#39;t know, serialize them. Oh, sorry, was that foreshadowing?</p>
+
+<h2 id="toc_21">NSCoding</h2>
+
+<p>So now we have a scalable infrastructure for models and we&#39;re getting some data from the server. Instead of making API calls every time we want to retrieve that data, we want to check if we have a local copy first (a.k.a. the &quot;cache&quot;). We could write our own custom saving code that writes our objects to a file or something, but there&#39;s a better idea.</p>
+
+<p>The <code>NSUserDefaults</code> object exists as a persistent key-value store. Typically, we use the instance of <code>NSUserDefaults.standardUserDefaults</code> as our object, like this:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="vi">@defaults</span> <span class="o">=</span> <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span>
+<span class="vi">@defaults</span><span class="o">[</span><span class="s2">&quot;one&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># somewhere else, next time we run the app</span>
+<span class="vi">@defaults</span><span class="o">[</span><span class="s2">&quot;one&quot;</span><span class="o">]</span>
+<span class="o">=&gt;</span> <span class="mi">1</span>
+</code></pre>
+</div>
+
+<p>Pretty nice right? The values in <code>NSUserDefaults</code> are saved as long as your app is installed; if you want to hasten that process, you can call <code>NSUserDefaults.resetStandardUserDefaults</code> to purge all entries.</p>
+
+<p>Now, there&#39;s one caveat: we can&#39;t store any old object in <code>NSUserDefaults</code>. We can either store primitives (like strings, integers, and hashes), or we can use raw data/bytes. Since our <code>User</code> object isn&#39;t a primitive, we have to use data the method. How does that work?</p>
+
+<p>We can put our model through a process called &quot;archiving&quot; using <code>NSKeyedArchiver</code>. This class takes an object and creates an instance of <code>NSData</code> that <code>NSUserDefaults</code> can save. The objects eligible for archiving are known as &quot;<code>NSCoding</code> compliant&quot;. Basically that means they implement two methods which define how to serialize and unserialize themselves using a standard API. If your models don&#39;t implement these methods, they can&#39;t be archived.</p>
+
+<p>The two methods to comply with <code>NSCoding</code> are <code>initWithCoder:</code> (used for loading an object) and <code>encodeWithCoder:</code> (used for saving an object). Both of these methods pass an instance of <code>NSCoder</code>, which allows us to encode primitive object types for given keys. <code>NSKeyedArchiver</code> and its sibling <code>NSKeyedUnarchiver</code> use these coders to convert an archived object to and from its saved form.</p>
+
+<p>The two methods should sort of be mirror-images: <code>encodeWithCoder</code> should <em>encode</em> all of the object&#39;s values for some set of keys, and then <code>initWithCoder</code> should <em>set</em> an object&#39;s values via decoding with <em>those same keys</em>.</p>
+
+<p>Let&#39;s just go through an example and you&#39;ll get the idea. Note how the two methods basically do the opposite of each other:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">Post</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:message</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:id</span>
+
+  <span class="c1"># called when an object is loaded from NSUserDefaults</span>
+  <span class="c1"># this is an initializer, so should return `self`</span>
+  <span class="k">def</span> <span class="nf">initWithCoder</span><span class="p">(</span><span class="n">decoder</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">init</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">decodeObjectForKey</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">decodeObjectForKey</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="c1"># called when saving an object to NSUserDefaults</span>
+  <span class="k">def</span> <span class="nf">encodeWithCoder</span><span class="p">(</span><span class="n">encoder</span><span class="p">)</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">encodeObject</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">forKey</span><span class="p">:</span> <span class="s2">&quot;message&quot;</span><span class="p">)</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">encodeObject</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">forKey</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>So what the heck does this let us do again? It allows you to convert any object into data that can be saved into <code>NSUserDefaults</code>. Let me show you:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="n">defaults</span> <span class="o">=</span> <span class="no">NSUserDefaults</span><span class="o">.</span><span class="n">standardUserDefaults</span>
+
+<span class="n">post</span> <span class="o">=</span> <span class="no">Post</span><span class="o">.</span><span class="n">new</span>
+<span class="n">post</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;hello!&quot;</span>
+<span class="n">post</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">post_as_data</span> <span class="o">=</span> <span class="no">NSKeyedArchiver</span><span class="o">.</span><span class="n">archivedDataWithRootObject</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+<span class="n">defaults</span><span class="o">[</span><span class="s2">&quot;saved_post&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="n">post_as_data</span>
+
+<span class="c1"># later on, we want to load this post:</span>
+
+<span class="n">post_as_data</span> <span class="o">=</span> <span class="n">defaults</span><span class="o">[</span><span class="s2">&quot;saved_post&quot;</span><span class="o">]</span>
+<span class="n">post</span> <span class="o">=</span> <span class="no">NSKeyedUnarchiver</span><span class="o">.</span><span class="n">unarchiveObjectWithData</span><span class="p">(</span><span class="n">post_as_data</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>These <code>encodeObject</code> and <code>decodeObjectForKey</code> are pretty cumbersome, so let&#39;s take advantage of our API model structure and make life easy:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">User</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+  <span class="k">def</span> <span class="nf">initWithCoder</span><span class="p">(</span><span class="n">decoder</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">init</span>
+    <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">prop</span><span class="o">|</span>
+      <span class="n">value</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">decodeObjectForKey</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="n">prop</span><span class="o">.</span><span class="n">to_s</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span>
+    <span class="p">}</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="c1"># called when saving an object to NSUserDefaults</span>
+  <span class="k">def</span> <span class="nf">encodeWithCoder</span><span class="p">(</span><span class="n">encoder</span><span class="p">)</span>
+    <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">prop</span><span class="o">|</span>
+      <span class="n">encoder</span><span class="o">.</span><span class="n">encodeObject</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">prop</span><span class="p">),</span> <span class="n">forKey</span><span class="p">:</span> <span class="n">prop</span><span class="o">.</span><span class="n">to_s</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Nice, right? One of the biggest pains of Objective-C is that adding new attributes to models is non-trivial. This sort of &quot;magical&quot; Ruby code reduces the friction of making changes to our code.</p>
+
+<p>So now that we have some <em>really</em> robust and flexible models, let&#39;s put some stuff on the screen for a change.</p>
+
+<h2 id="toc_22">Key-Value Observing Example</h2>
+
+<p>I think Key-Value Observing (KVO for short) is really freaking cool and will save you a ton of time.</p>
+
+<p>In RubyMotion, objects have the ability to &quot;observe&quot; arbitrary properties of other objects. So let&#39;s say I&#39;m observing a user&#39;s name; when that user&#39;s &quot;#name&quot; property changes values, I automatically get a callback with the new value. There&#39;s no custom infrastructure or delegation you have to write, it just works.</p>
+
+<p>The practical example of this is having a view tied to a property of an object, like a <code>UILabel</code> which should always represent <code>@user.name</code>. When the name changes, the label automatically updates and stays in sync with the model. We&#39;re going to implement something like that right now.</p>
+
+<p>Create a new RubyMotion project, like <code>motion create KeyValueFun</code>. You also need to make <code>./app/user.rb</code>, which is where we&#39;ll play with our <code>User</code> model.</p>
+
+<p>There&#39;s one more thing you need to do: use BubbleWrap.</p>
+
+<p><a href="http://bubblewrap.io/">BubbleWrap</a> is a collection of idiomatic Ruby wrappers for the iOS SDK. A lot of Apple&#39;s APIs use a system of calling pre-established methods on a callback object. This is preferable on Objective-C but not so much in Ruby, where there have always been anonymous functions to pass around. Thus, many of BubbleWrap&#39;s wrappers are just moving such callback method into inline <code>lambda</code>s and <code>block</code>s. It uses such a wrapper to make Key-Value Observing really simple.</p>
+
+<p>How do we install third-party libraries in RubyMotion? Well, we can either clone the repo and add it to our directory structure, or we can use <a href="http://rubygems.org/pages/download">RubyGems</a>. The latter makes third-party code much easier to install and maintain, so I always reccomend checking if a new RubyMotion library can be installed as a gem (and if it isn&#39;t, then fork and fix it!)</p>
+
+<p>In your terminal, run <code>gem install bubble-wrap</code>. This will install BubbleWrap to your computer like any other gem; however, an error will be thrown if you try to <code>require &quot;bubble-wrap&quot;</code> in a non-RubyMotion project.</p>
+
+<p><code>require &quot;bubble-wrap&quot;</code> in the <code>Rakefile</code>, like so:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;bubble-wrap&#39;</span>
+
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>Now to the real code. In <code>user.rb</code>, you can either use the robust, API-friendly <code>User</code> class outlined above or use the more concise (but still workable) version:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:id</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:email</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>In <code>AppDelegate</code>, we&#39;re going to create a label for each of the <code>User</code>&#39;s fields: <code>id</code>, <code>name</code>, and <code>email</code>. Then we&#39;ll start observing those attributes on our object and update each label accordingly. Sound simple? Well, let&#39;s walk through it anyway.</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">AppDelegate</span>
+  <span class="kp">include</span> <span class="no">BW</span><span class="o">::</span><span class="no">KVO</span>
+
+  <span class="kp">attr_accessor</span> <span class="ss">:user</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>In order to use BubbleWrap&#39;s nice KVO wrapper (we&#39;ll get to that in a second), we need to <code>include</code> its methods. You must do this for any object which observes properties. We also added a <code>#user</code> attribute, which will make debugging easier. Now, about those views:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+    <span class="vi">@window</span> <span class="o">=</span> <span class="no">UIWindow</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">UIScreen</span><span class="o">.</span><span class="n">mainScreen</span><span class="o">.</span><span class="n">applicationFrame</span><span class="p">)</span>
+    <span class="vi">@window</span><span class="o">.</span><span class="n">makeKeyAndVisible</span>
+
+    <span class="vi">@name_label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">30</span><span class="o">]]</span><span class="p">)</span>
+    <span class="vi">@window</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@name_label</span><span class="p">)</span>
+
+    <span class="vi">@email_label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="vi">@name_label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="mi">10</span><span class="o">]</span><span class="p">,</span> <span class="vi">@name_label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">]</span><span class="p">)</span>
+    <span class="vi">@window</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@email_label</span><span class="p">)</span>
+
+    <span class="vi">@id_label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="vi">@email_label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="vi">@email_label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="mi">10</span><span class="o">]</span><span class="p">,</span> <span class="vi">@name_label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">]</span><span class="p">)</span>
+    <span class="vi">@window</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@id_label</span><span class="p">)</span>
+
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>We add all of our labels to the <code>@window</code>, aligning them vertically. You could make the presentation a lot prettier, but we&#39;re trying to be quick here.</p>
+
+<p>Finally, the fun part: <code>observe</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+
+    <span class="o">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="o">].</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">prop</span><span class="o">|</span>
+      <span class="n">observe</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="o">|</span>
+        <span class="nb">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@</span><span class="si">#{</span><span class="n">prop</span><span class="si">}</span><span class="s2">_label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">new_value</span>
+      <span class="k">end</span>
+    <span class="p">}</span>
+
+    <span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>The KVO <code>observe</code> function is of the form <code>observe(#&lt;object to be observed&gt;, &quot;the property&quot;) do ....</code>. We use a nice Ruby trick here to reduce duplication with <code>#each</code>, but if we flatten this function out for one property it looks like:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="n">observe</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="o">|</span>
+  <span class="nb">instance_variable_get</span><span class="p">(</span><span class="s2">&quot;@name_label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">new_value</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Cool, right? Now you need to remember that if we re-assign <code>self.user</code>, this will stop working because we&#39;re specifically only observing whatever <code>self.user</code> happens to be at that point in time. So later if we do <code>self.user = some_other_user</code>, these observations will stop.</p>
+
+<p>How do we test it? <code>rake</code> and head over to the debug console. If we dig around correctly, we should be able to get our <code>User</code> object and start playing with it:</p>
+<div class="highlight"><pre class='codehilite'><code class="text syntax">$ rake
+  ...
+(main)&gt; delegate = UIApplication.sharedApplication.delegate
+=&gt; #&lt;AppDelegate .... &gt;
+(main)&gt; user = delegate.user
+=&gt; #&lt;NSKVONotifying_User&gt;
+(main)&gt; user.email = &quot;test@mail.com&quot;
+=&gt; &quot;test@mail.com&quot;
+(main)&gt; user.name = &quot;clay&quot;
+=&gt; &quot;clay&quot;
+(main)&gt; user.id = &quot;9000&quot;
+=&gt; &quot;9000&quot;
+</code></pre>
+</div>
+
+<p>This should produce a result like this:</p>
+
+<p><img src="images/0.png" alt="KVO data"></p>
+
+<h2 id="toc_23">Wrapping Up</h2>
+
+<p>We&#39;ve been playing around with the &quot;sexy&quot; parts of iOS for a bit, but at the end of the day a solid model architecture and KVO are just as important to the user experience. What all did we actually learn?</p>
+
+<ul>
+<li>Models are plain Ruby objects; add properties to them using the <code>attr_[accessor/reader/writer]</code> methods</li>
+<li>Use a constant like <code>PROPERTIES</code> to define your attributes, it makes loading from a hash in <code>initialize</code> really easy.</li>
+<li><code>NSUserDefaults</code> is a persistant store for primitives; use <code>NSKeyedArchiver</code> and <code>NSKeyedUnarchiver</code> to store your models. This requires you to implement <code>initWithCoder:</code> and <code>encodeWithCoder:</code> in your class.</li>
+<li>Key-Value Observing lets your objects get notified of changes in another object&#39;s properties.</li>
+<li><code>include BW::KVO</code> and use the <code>observe</code> function for simple Key-Value Observing.</li>
+</ul>
+
+<p><a href="/8-testing">Use the force to see how RubyMotion handles Testing!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>

@@ -1,0 +1,147 @@
+
+<!doctype html>
+  <head>
+    <meta name="description" content="The RubyMotion Tutorial" />
+    <meta charset=utf-8 />
+    <title> In Motion |  RubyMotion Tutorial</title>
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='/css/bootstrap.min.css'>
+    <link rel=stylesheet href='/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='/css/blog/pygments.css'>
+    <link rel=stylesheet href='/css/patch.css'>
+    <link rel=stylesheet href='/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li  class="active" >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_0">Prologue: In Motion</h1>
+
+<h2 id="toc_1">In The Beginning</h2>
+
+<p>Over the past five years, the amount and variation of products created on iOS has exceeded everyone&#39;s expectations; however, the process of iOS development has remained fundamentally unchanged. There have been welcome improvements to the Objective-C language (blocks, ARC, literals), but it&#39;s clear that Apple intends to stick with it for the long haul.</p>
+
+<p>And that&#39;s not a bad thing at all. Objective-C is fantastic for what it wants to be: a dynamic, object-oriented superset of C. It can do compile-time type-checking while still providing introspection and reflection at runtime, which lets you do some magical yet stable tricks with your code.</p>
+
+<p>But despite its strengths, many programmers balk at the prospect of learning a niche and odd-looking language just to make iOS software. Instead, they turn to familiar yet non-native technologies like HTML5, which ultimately produce a substandard user experience. Wouldn&#39;t it be wonderful if there was a more accessible language with which we could write native, performant iOS apps? <em>dun dun dun</em></p>
+
+<h2 id="toc_2">And Then There Was Motion</h2>
+
+<p><a href="http://rubymotion.com">RubyMotion</a> is such a solution. It allows you to write iOS apps in <a href="http://www.ruby-lang.org/en/">Ruby</a> with no penalty to user experience. And it preserves the iOS SDK exactly as intended by Apple, so all exisiting code examples and tutorials are perfectly translateable.</p>
+
+<p>How does that work? Well, technically it&#39;s a <em>variant</em> of Ruby; you can&#39;t use some of Ruby&#39;s extremely dynamic methods like <code>eval</code> or <code>define_method</code>, and it adds some new features like <code>functions.with(some, named: parameters)</code>. This allows your Ruby code to be compiled to machine code identical to Objective-C; in other words, the device can&#39;t tell the difference between RubyMotion and normal iOS apps.</p>
+
+<p>If you just don&#39;t like Ruby, RubyMotion won&#39;t change your mind. But if you aren&#39;t totally anti-Ruby, or you&#39;re just a developer who wants to write apps in a language farther away from the metal, I highly recommend you give RubyMotion a chance.</p>
+
+<p><a href="/1-hello-motion">Head to the first chapter and get started!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>

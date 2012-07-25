@@ -1,0 +1,581 @@
+
+<!doctype html>
+  <head>
+    <meta name="description" content="The RubyMotion Tutorial" />
+    <meta charset=utf-8 />
+    <title> API Driven Example |  RubyMotion Tutorial</title>
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='/css/bootstrap.min.css'>
+    <link rel=stylesheet href='/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='/css/blog/pygments.css'>
+    <link rel=stylesheet href='/css/patch.css'>
+    <link rel=stylesheet href='/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_30">API Driven Example: Colr</h1>
+
+<p>We&#39;re going to build a front-end for the <a href="http://www.colr.org/api.html">Colr JSON API</a>. Our users can type in a color hex code (i.e. &quot;#3B5998&quot;) and then see what tags Colr users have assigned to that color. If our user is feeling particularly adventerous, they can add a new tag!</p>
+
+<p>Let&#39;s talk about high-level architecture. We need two controllers: one for search, and one for a color. These should be wrapped inside a <code>UINavigationController</code>, our top level controller. We&#39;re also going to need some models: <code>Color</code> and <code>Tag</code>. I&#39;m going to be honest: our app won&#39;t be the next top post on Dribbble, but it will work.</p>
+
+<h2 id="toc_31">Setup</h2>
+
+<p><code>motion create Colr</code> to get our project set up, and add <code>require &#39;bubble-wrap&#39;</code> to our <code>Rakefile</code>. We&#39;re going to do a proper setup and create some folders <em>inside</em> <code>./app</code>: make <code>./app/models/</code> and <code>./app/controllers</code>.</p>
+
+<h2 id="toc_32">Models</h2>
+
+<p>First lets dig into our models. The Colr API returns its colors as JSON objects as the form:</p>
+<div class="highlight"><pre class='codehilite'><code class="text syntax">{
+  &quot;timestamp&quot;: 1285886579,
+  &quot;hex&quot;: &quot;ff00ff&quot;,
+  &quot;id&quot;: 3976,
+  &quot;tags&quot;: [{
+    &quot;timestamp&quot;: 1108110851,
+    &quot;id&quot;: 2583,
+    &quot;name&quot;: &quot;fuchsia&quot;
+  }]
+}
+</code></pre>
+</div>
+
+<p>So our <code>Color</code>s will need <code>timestamp</code>, <code>hex</code>, <code>id</code>, and <code>tags</code> properties. In particular, <code>tags</code> will represent a has-many relationship with our <code>Tag</code> objects.</p>
+
+<p>Make a <code>./app/models/color.rb</code> and fill it in with our nice model template:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">Color</span>
+  <span class="no">PROPERTIES</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:timestamp</span><span class="p">,</span> <span class="ss">:hex</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:tags</span><span class="o">]</span>
+  <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">prop</span><span class="o">|</span>
+    <span class="kp">attr_accessor</span> <span class="n">prop</span>
+  <span class="p">}</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">hash</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="nb">hash</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span>
+      <span class="k">if</span> <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">member?</span> <span class="n">key</span><span class="o">.</span><span class="n">to_sym</span>
+        <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="n">key</span><span class="o">.</span><span class="n">to_s</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>Pretty easy to do with the <code>PROPERTIES</code> trick. But we need to give some special treatment to the <code>tags</code> attribute, which forces it to be always an array of <code>Tag</code> objects:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+  <span class="k">def</span> <span class="nf">tags</span>
+    <span class="vi">@tags</span> <span class="o">||=</span> <span class="o">[]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">tags</span><span class="o">=</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tags</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">is_a?</span> <span class="no">Hash</span>
+      <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span><span class="o">.</span><span class="n">collect</span> <span class="p">{</span> <span class="o">|</span><span class="n">tag</span><span class="o">|</span> <span class="no">Tag</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+
+    <span class="n">tags</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">tag</span><span class="o">|</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">tag</span><span class="o">.</span><span class="n">is_a?</span> <span class="no">Tag</span>
+        <span class="k">raise</span> <span class="s2">&quot;Wrong class for attempted tag </span><span class="si">#{</span><span class="n">tag</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+      <span class="k">end</span>
+    <span class="p">}</span>
+
+    <span class="vi">@tags</span> <span class="o">=</span> <span class="n">tags</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Our custom <code>#tags</code> getter guarantees that it will return an array if no value has been given. The <code>#tags=</code> setter ensures that every object in <code>tags</code> will be an actual <code>Tag</code> object. But wait...we haven&#39;t written the <code>Tag</code> class yet!</p>
+
+<p>Create and open <code>./app/models/tag.rb</code>. As you can see from the above example, the tags returned from the API are of the form:</p>
+<div class="highlight"><pre class='codehilite'><code class="text syntax">{
+  &quot;timestamp&quot;: 1108110851,
+  &quot;id&quot;: 2583,
+  &quot;name&quot;: &quot;fuchsia&quot;
+}
+</code></pre>
+</div>
+
+<p>So in our <code>Tag</code> class, let&#39;s create our nice API-friendly model. No special overrides for this one, it can work as-is:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">Tag</span>
+  <span class="no">PROPERTIES</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:timestamp</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span><span class="o">]</span>
+  <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">prop</span><span class="o">|</span>
+    <span class="kp">attr_accessor</span> <span class="n">prop</span>
+  <span class="p">}</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">hash</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="nb">hash</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span>
+      <span class="k">if</span> <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">member?</span> <span class="n">key</span><span class="o">.</span><span class="n">to_sym</span>
+        <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="n">key</span><span class="o">.</span><span class="n">to_s</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h2 id="toc_33">Controllers</h2>
+
+<p>Now that we have our models, time to start our controllers. Make <code>./app/controllers/search_controller.rb</code> and <code>./app/controllers/color_controller.rb</code>. We should give them a bare-bones implementation for now:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">SearchController</span> <span class="o">&lt;</span> <span class="no">UIViewController</span>
+  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="k">super</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Search&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">ColorController</span> <span class="o">&lt;</span> <span class="no">UIViewController</span>
+  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="k">super</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Color&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>And in our <code>AppDelegate</code>, throw a <code>UIWindow</code> and <code>UINavigationController</code> on the screen:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">AppDelegate</span>
+  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+    <span class="vi">@window</span> <span class="o">=</span> <span class="no">UIWindow</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">UIScreen</span><span class="o">.</span><span class="n">mainScreen</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+
+    <span class="vi">@search_controller</span> <span class="o">=</span> <span class="no">SearchController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="ss">:nil</span><span class="p">)</span>
+    <span class="vi">@navigation_controller</span> <span class="o">=</span> <span class="no">UINavigationController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithRootViewController</span><span class="p">(</span><span class="vi">@search_controller</span><span class="p">)</span>
+
+    <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="vi">@navigation_controller</span>
+    <span class="vi">@window</span><span class="o">.</span><span class="n">makeKeyAndVisible</span>
+    <span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>We&#39;ve seen this stuff before, but maybe not all at once. <code>rake</code> and check out our spartan app:</p>
+
+<p><img src="images/0.png" alt="search title in app"></p>
+
+<p>Good start! Time to fill in our <code>SearchController</code>.</p>
+
+<h2 id="toc_34">SearchController</h2>
+
+<p>We&#39;re going to add a new type of control we haven&#39;t used, <code>UITextField</code>, to retreive the hex code from the user. When the user pushes a &quot;Search&quot; button, we&#39;ll run the appropriate API request and lock the UI until it finishes. If we found a result, we&#39;ll push a new <code>ColorController</code>; else, we&#39;ll show a sad alert. Sound gravy?</p>
+
+<p>We can setup our views in <code>SearchController</code> using something like this:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="k">super</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Search&quot;</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">whiteColor</span>
+
+    <span class="vi">@text_field</span> <span class="o">=</span> <span class="no">UITextField</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">160</span><span class="p">,</span> <span class="mi">26</span><span class="o">]]</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="s2">&quot;#abcabc&quot;</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">autocapitalizationType</span> <span class="o">=</span> <span class="no">UITextAutocapitalizationTypeNone</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">borderStyle</span> <span class="o">=</span> <span class="no">UITextBorderStyleRoundedRect</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="no">CGPointMake</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@text_field</span>
+
+    <span class="vi">@search</span> <span class="o">=</span> <span class="no">UIButton</span><span class="o">.</span><span class="n">buttonWithType</span><span class="p">(</span><span class="no">UIButtonTypeRoundedRect</span><span class="p">)</span>
+    <span class="vi">@search</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Search&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateNormal</span><span class="p">)</span>
+    <span class="vi">@search</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Loading&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateDisabled</span><span class="p">)</span>
+    <span class="vi">@search</span><span class="o">.</span><span class="n">sizeToFit</span>
+    <span class="vi">@search</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="no">CGPointMake</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="vi">@text_field</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@search</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>A lot of the specific positioning (<code>self.view.frame.size.height / 2 - 100</code>) are based on my personal guess and check, there&#39;s not special magic going on (unfortunately). Some new bits are <code>UIControlStateDisabled</code>, which corresponds to what the button looks like if we do <code>@search.enabled = false</code>, and <code>UITextBorderStyleRoundedRect</code>, which is a nice-looking style of <code>UITextField</code>s.</p>
+
+<p><code>rake</code> now and get a feel for our interface:</p>
+
+<p><img src="images/1.png" alt="search controller in app"></p>
+
+<p>Time to hook it up to some events. Remember when I said <code>BubbleWrap</code> comes with some nifty wrappers? Well, it has one to replace the clumsy <code>addTarget:action:forControlEvents</code> syntax we used earlier. Check out how idiomatic Ruby can make our code much cleaner:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@search</span>
+
+    <span class="vi">@search</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="no">UIControlEventTouchUpInside</span><span class="p">)</span> <span class="k">do</span>
+      <span class="vi">@search</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">false</span>
+      <span class="vi">@text_field</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">false</span>
+
+      <span class="n">hex</span> <span class="o">=</span> <span class="vi">@text_field</span><span class="o">.</span><span class="n">text</span>
+      <span class="c1"># chop off any leading #s</span>
+      <span class="n">hex</span> <span class="o">=</span> <span class="n">hex</span><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="k">if</span> <span class="n">hex</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span>
+
+      <span class="no">Color</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">hex</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">color</span><span class="o">|</span>
+        <span class="vi">@search</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+        <span class="vi">@text_field</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>The <code>when</code> function is available to every <code>UIControl</code> subclass (of which <code>UIButton</code> is one) and takes the usual bitmask of <code>UIControlEvent</code>s as its arguments. While the request runs, we temporarily disable our UI elements.</p>
+
+<p>But wait...what&#39;s that <code>Color.find</code> method? Well, it&#39;s a good idea to keep all of your URL requests inside of models instead of controllers. That way if we want to get a <code>Color</code> from the server somewhere else in the app then there&#39;s no code duplication. Who knows, maybe we&#39;ll need that too...<em>foreshadowing</em></p>
+
+<p>So in your <code>Color</code> class, add the <code>find</code> static method:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">Color</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find</span><span class="p">(</span><span class="n">hex</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="no">BW</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://www.colr.org/json/color/</span><span class="si">#{</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+      <span class="nb">p</span> <span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">to_str</span>
+      <span class="c1"># for now, pass nil.</span>
+      <span class="n">block</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="kp">nil</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Look bad? We use the basic <code>HTTP.get</code> to get some data from the server via the proper API URL. Note that we use the <code>&amp;block</code> notation to make it plain that this function is intended to be used with a block. This block isn&#39;t explicility passed as another argument, but rather is implicilty passed when we put a <code>do/end</code> after we call the method. The number and order of variables in <code>.call(some, variables)</code> corresponds to <code>do |some, variables|</code>.</p>
+
+<p>Anyway, <code>rake</code> and give it a go with a color like &quot;3B5998&quot;. You should see something like this output in the console:</p>
+<div class="highlight"><pre class='codehilite'><code class="text syntax">(main)&gt; &quot;{\&quot;colors\&quot;: [{\&quot;timestamp\&quot;: 1285886579, \&quot;hex\&quot;: \&quot;ff00ff\&quot;, \&quot;id\&quot;: 3976, \&quot;tags\&quot;: [{\&quot;timestamp\&quot;: 1108110851, \&quot;id\&quot;: 2583, \&quot;name\&quot;: \&quot;fuchsia\&quot;}, {\&quot;timestamp\&quot;: 1108110864, \&quot;id\&quot;: 3810, \&quot;name\&quot;: \&quot;magenta\&quot;}, {\&quot;timestamp\&quot;: 1108110870, \&quot;id\&quot;: 4166, \&quot;name\&quot;: \&quot;magic\&quot;}, {\&quot;timestamp\&quot;: 1108110851, \&quot;id\&quot;: 2626, \&quot;name\&quot;: \&quot;pink\&quot;}, {\&quot;timestamp\&quot;: 1240447803, \&quot;id\&quot;: 24479, \&quot;name\&quot;: \&quot;rgba8b24ff00ff\&quot;}, {\&quot;timestamp\&quot;: 1108110864, \&quot;id\&quot;: 3810, \&quot;name\&quot;: \&quot;magenta\&quot;}]}], \&quot;schemes\&quot;: [], \&quot;schemes_history\&quot;: {}, \&quot;success\&quot;: true, \&quot;colors_history\&quot;: {\&quot;ff00ff\&quot;: [{\&quot;d_count\&quot;: 0, \&quot;id\&quot;: \&quot;4166\&quot;, \&quot;a_count\&quot;: 1, \&quot;name\&quot;: \&quot;magic\&quot;}, {\&quot;d_count\&quot;: 0, \&quot;id\&quot;: \&quot;2626\&quot;, \&quot;a_count\&quot;: 1, \&quot;name\&quot;: \&quot;pink\&quot;}, {\&quot;d_count\&quot;: 0, \&quot;id\&quot;: \&quot;24479\&quot;, \&quot;a_count\&quot;: 1, \&quot;name\&quot;: \&quot;rgba8b24ff00ff\&quot;}, {\&quot;d_count\&quot;: 0, \&quot;id\&quot;: \&quot;3810\&quot;, \&quot;a_count\&quot;: 1, \&quot;name\&quot;: \&quot;magenta\&quot;}]}, \&quot;messages\&quot;: [], \&quot;new_color\&quot;: \&quot;ff00ff\&quot;}\n&quot;
+</code></pre>
+</div>
+
+<p>Hey...that looks an awful like JSON, doesn&#39;t it? (if you didn&#39;t notice the &quot;/json/&quot; in the URL). Wouldn&#39;t it be great if we could parse that into a normal Ruby hash?</p>
+
+<p>BubbleWrap to the rescue again! Our nifty friend also has a <code>BW::JSON.parse</code> method which does exactly what it sounds like. Let&#39;s update <code>Color.find</code> to use it:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find</span><span class="p">(</span><span class="n">hex</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+  <span class="no">BW</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://www.colr.org/json/color/</span><span class="si">#{</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+    <span class="n">result_data</span> <span class="o">=</span> <span class="no">BW</span><span class="o">::</span><span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">to_str</span><span class="p">)</span>
+    <span class="n">color_data</span> <span class="o">=</span> <span class="n">result_data</span><span class="o">[</span><span class="s2">&quot;colors&quot;</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span>
+
+    <span class="c1"># Colr will return a color with id == -1 if no color was found</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="no">Color</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">color_data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">to_i</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+      <span class="n">block</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="kp">nil</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="n">block</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>And in our <code>SearchController</code>, our callback can adapt appropriately if we got an invalid color:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+      <span class="no">Color</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">hex</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">color</span><span class="o">|</span>
+        <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">nil?</span>
+          <span class="vi">@search</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;None :(&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="p">:</span> <span class="no">UIControlStateNormal</span><span class="p">)</span>
+        <span class="k">else</span>
+          <span class="vi">@search</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Search&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="p">:</span> <span class="no">UIControlStateNormal</span><span class="p">)</span>
+          <span class="nb">self</span><span class="o">.</span><span class="n">open_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+        <span class="k">end</span>
+
+        <span class="vi">@search</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+        <span class="vi">@text_field</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">open_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="nb">p</span> <span class="s2">&quot;Opening </span><span class="si">#{</span><span class="n">color</span><span class="si">}</span><span class="s2">&quot;</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>This seems pretty reasonable. We parse the JSON, check for the non-existentant/-1 id, and alter the UI accordingly:</p>
+
+<p><img src="images/2.png" alt="search controller in app"></p>
+
+<p>Great! Let&#39;s fix that <code>open_color</code> method to work. It should push a <code>ColorController</code> with the proper color, so we should probably fill in that implementation now.</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">open_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+  <span class="nb">self</span><span class="o">.</span><span class="n">navigationController</span><span class="o">.</span><span class="n">pushViewController</span><span class="p">(</span><span class="no">ColorController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithColor</span><span class="p">(</span><span class="n">color</span><span class="p">),</span> <span class="n">animated</span><span class="ss">:true</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h2 id="toc_35">ColorController</h2>
+
+<p>We&#39;re going to use a custom initializer for <code>ColorController</code>; these custom initializers should always call the designated initializer of their superclass first (in this case, <code>initWithNibName:bundle:</code>). The controller&#39;s view will have two parts: a <code>UITableView</code> to display the color&#39;s tags, and a section to display the color and add new tags. When we want to add a new tag, a POST request is sent and our data is refreshed accordingly.</p>
+
+<p>That sounds like a lot, so let&#39;s take it one step at a time. First, our custom initializer:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">ColorController</span> <span class="o">&lt;</span> <span class="no">UIViewController</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:color</span>
+
+  <span class="k">def</span> <span class="nf">initWithColor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="ss">:nil</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>When overriding an iOS SDK initializer, you need to do two things: call the designated initializer and return <code>self</code> at the end. Beware: you can&#39;t use the usual Ruby <code>initialize</code> function!</p>
+
+<p>Next, let&#39;s layout our interface:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="k">super</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span>
+
+    <span class="c1"># A light grey background to separate the Tag table from the Color info</span>
+    <span class="vi">@info_container</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">110</span><span class="o">]]</span>
+    <span class="c1"># need to guarantee .hex is a String</span>
+    <span class="vi">@color_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="nb">String</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span><span class="p">)</span><span class="o">.</span><span class="n">to_color</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@info_container</span>
+
+    <span class="c1"># A visual preview of the actual color</span>
+    <span class="vi">@color_view</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="o">]]</span>
+    <span class="c1"># String#to_color is another handy BubbbleWrap addition!</span>
+    <span class="vi">@color_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span><span class="o">.</span><span class="n">to_color</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@color_view</span>
+
+    <span class="c1"># Displays the hex code of our color</span>
+    <span class="vi">@color_label</span> <span class="o">=</span> <span class="no">UILabel</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[[</span><span class="mi">110</span><span class="p">,</span> <span class="mi">30</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]]</span>
+    <span class="vi">@color_label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span>
+    <span class="vi">@color_label</span><span class="o">.</span><span class="n">sizeToFit</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@color_label</span>
+
+    <span class="c1"># Where we enter the new tag</span>
+    <span class="vi">@text_field</span> <span class="o">=</span> <span class="no">UITextField</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[[</span><span class="mi">110</span><span class="p">,</span> <span class="mi">60</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">26</span><span class="o">]]</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="s2">&quot;tag&quot;</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="no">UITextAlignmentCenter</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">autocapitalizationType</span> <span class="o">=</span> <span class="no">UITextAutocapitalizationTypeNone</span>
+    <span class="vi">@text_field</span><span class="o">.</span><span class="n">borderStyle</span> <span class="o">=</span> <span class="no">UITextBorderStyleRoundedRect</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@text_field</span>
+
+    <span class="c1"># Tapping this adds the tag.</span>
+    <span class="vi">@add</span> <span class="o">=</span> <span class="no">UIButton</span><span class="o">.</span><span class="n">buttonWithType</span><span class="p">(</span><span class="no">UIButtonTypeRoundedRect</span><span class="p">)</span>
+    <span class="vi">@add</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Add&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateNormal</span><span class="p">)</span>
+    <span class="vi">@add</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Adding...&quot;</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateDisabled</span><span class="p">)</span>
+    <span class="vi">@add</span><span class="o">.</span><span class="n">setTitleColor</span><span class="p">(</span><span class="no">UIColor</span><span class="o">.</span><span class="n">lightGrayColor</span><span class="p">,</span> <span class="n">forState</span><span class="ss">:UIControlStateDisabled</span><span class="p">)</span>
+    <span class="vi">@add</span><span class="o">.</span><span class="n">sizeToFit</span>
+    <span class="vi">@add</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[[</span><span class="vi">@text_field</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="vi">@text_field</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="vi">@text_field</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span><span class="o">]</span><span class="p">,</span>
+                      <span class="vi">@add</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">]</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@add</span><span class="p">)</span>
+
+    <span class="c1"># The table for our color&#39;s tags.</span>
+    <span class="n">table_frame</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="vi">@info_container</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="o">]</span><span class="p">,</span>
+                  <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="vi">@info_container</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="nb">self</span><span class="o">.</span><span class="n">navigationController</span><span class="o">.</span><span class="n">navigationBar</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="o">]]</span>
+    <span class="vi">@table_view</span> <span class="o">=</span> <span class="no">UITableView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="n">table_frame</span><span class="p">,</span> <span class="n">style</span><span class="ss">:UITableViewStylePlain</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@table_view</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>WHEW WELL THAT IS A TON OF CODE NOW ISN&#39;T IT. But again, we&#39;ve built up to this point so we&#39;ve seen it all, don&#39;t be intimidated. We just added a bunch of subviews and hooked them up to the appropriate data.</p>
+
+<p><code>rake</code> and see for yourself:</p>
+
+<p><img src="images/3.png" alt="color controller in app"></p>
+
+<p>Hey, I told you it wouldn&#39;t win any design awards.</p>
+
+<p>Time to hook up the tags. We&#39;re going to use our handy table view <code>delegate</code> methods to populate the table with the tags. It&#39;ll be just a normal list, no fancy sections or callbacks:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+    <span class="vi">@table_view</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span><span class="ss">:section</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">count</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">cellForRowAtIndexPath</span><span class="ss">:indexPath</span><span class="p">)</span>
+    <span class="vi">@reuseIdentifier</span> <span class="o">||=</span> <span class="s2">&quot;CELL_IDENTIFIER&quot;</span>
+
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">dequeueReusableCellWithIdentifier</span><span class="p">(</span><span class="vi">@reuseIdentifier</span><span class="p">)</span> <span class="o">||</span> <span class="k">begin</span>
+      <span class="no">UITableViewCell</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithStyle</span><span class="p">(</span><span class="no">UITableViewCellStyleDefault</span><span class="p">,</span> <span class="n">reuseIdentifier</span><span class="ss">:@reuseIdentifier</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">tags</span><span class="o">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="o">].</span><span class="n">name</span>
+
+    <span class="n">cell</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Another<code>rake</code> and hey! Some interesting data!</p>
+
+<p><img src="images/4.png" alt="color tags in app"></p>
+
+<p>And now one more thing: adding new tags. There are a couple of ways to oragnize this new feature, like <code>Tag.create(tag)</code> or magically hack into <code>color.tags &lt;&lt; tag</code>, but we&#39;re going to go with <code>color.add_tag(tag, &amp;block)</code>. Why? Because it shows that tags and colors are tightly coupled.</p>
+
+<p>Here&#39;s what that <code>add_tag</code> method looks like:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">add_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="no">BW</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;http://www.colr.org/js/color/</span><span class="si">#{</span><span class="nb">self</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">/addtag/&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="p">{</span><span class="n">tags</span><span class="p">:</span> <span class="n">tag</span><span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+      <span class="n">block</span><span class="o">.</span><span class="n">call</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Here we don&#39;t pass any extra arguments to <code>block.call</code>. We could pass some designation of success or failure, but we don&#39;t have to be super fault tolerant for this example.</p>
+
+<p>Now we place the <code>add_tag</code> code inside our button callback in <code>ColorController</code>. After the tag is sent to the server, we want to refresh our color with the current server data to make absolutely sure that the server received our tag. So, let&#39;s add that <code>when</code> callback:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@add</span><span class="p">)</span>
+
+    <span class="vi">@add</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="no">UIControlEventTouchUpInside</span><span class="p">)</span> <span class="k">do</span>
+      <span class="vi">@add</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">false</span>
+      <span class="vi">@text_field</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">false</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">add_tag</span><span class="p">(</span><span class="vi">@text_field</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">refresh</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">refresh</span>
+    <span class="no">Color</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">color</span><span class="o">|</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+
+      <span class="vi">@table_view</span><span class="o">.</span><span class="n">reloadData</span>
+
+      <span class="vi">@add</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+      <span class="vi">@text_field</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kp">true</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Let&#39;s walk through this. We add our <code>UIControlEventTouchUpInside</code> callback to <code>@add</code>, which calls <code>color.add_tag</code> and runs the appropriate POST request. When that request finishes, we call a new <code>refresh</code> method. This will run the normal <code>Color.find</code> request and reset our data.</p>
+
+<p>Give it a <code>rake</code> and add a tag. Should go swimmingly.</p>
+
+<p><img src="images/5.png" alt="adding a tag"></p>
+
+<h2 id="toc_36">Wrapping Up</h2>
+
+<p>Whew, that&#39;s a giant example. It&#39;s decently architected and demonstrates one way of separating responsibility between models and controllers. We could&#39;ve done more with the views, maybe adding some KVO, but for such a small example it would&#39;ve been overkill.</p>
+
+<p>What should we take away from this?</p>
+
+<ul>
+<li>Use models to represent your data, don&#39;t use the hashes you get returned from <code>JSON.parse</code>.</li>
+<li>Run your URL requests in models.</li>
+<li>Use your controllers to respond to callbacks and user events.</li>
+<li>Keep the interface responsive by disabling or changing the UI while time consuming requests are running.</li>
+</ul>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>

@@ -1,0 +1,229 @@
+
+<!doctype html>
+  <head>
+    <meta name="description" content="The RubyMotion Tutorial" />
+    <meta charset=utf-8 />
+    <title> Views |  RubyMotion Tutorial</title>
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='/css/bootstrap.min.css'>
+    <link rel=stylesheet href='/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='/css/blog/pygments.css'>
+    <link rel=stylesheet href='/css/patch.css'>
+    <link rel=stylesheet href='/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_6">Views</h1>
+
+<p>Now that we&#39;ve gotten a project running, let&#39;s start putting things on the screen.</p>
+
+<p>The &quot;stuff&quot; that&#39;s displayed in an app are called &quot;views&quot;. A view can have many &quot;subviews&quot;; when you move a view, you also move its subviews. Subviews are also visually stacked on top of each other within their parent.</p>
+
+<p>In code, these are <code>UIView</code> objects; everything you see on the screen is a descendent of <code>UIView</code>. They have a lot of nifty features, but what you should be concerned about right now is that they have:</p>
+
+<ol>
+<li>A <code>frame</code> property, which contains a view&#39;s <code>x</code> and <code>y</code> coordinates and its <code>width</code> and <code>height</code> dimensions.</li>
+<li>A <code>subviews</code> property, which is an array of all the view&#39;s subviews, sorted by back-to-front visibility (as in the index of a view in <code>subviews</code> is its &quot;z-order&quot;).</li>
+</ol>
+
+<p>A view&#39;s <code>frame</code> describes its shape and position relative to its parent view. That&#39;s a lot of words, so let me show you a quick example: imagine I have a view at (10, 10). I want a new subview of that view to appear at (50, 50) on the screen, so I have to set my new view&#39;s frame to be positioned at (40, 40). Make sense?</p>
+
+<p>The base view of an app is the &quot;window&quot;; all other views are direct or descendent subviews of the window. Your app&#39;s window is a subclass of <code>UIView</code> called <code>UIWindow</code>.</p>
+
+<p>Let&#39;s get to some code. In <code>AppDelegate</code>, change our <code>didFinishLaunching</code> method to look like:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+  <span class="c1"># UIScreen describes the display our app is running on</span>
+  <span class="vi">@window</span> <span class="o">=</span> <span class="no">UIWindow</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">UIScreen</span><span class="o">.</span><span class="n">mainScreen</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">makeKeyAndVisible</span>
+
+  <span class="vi">@blue_view</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">CGRectMake</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+  <span class="vi">@blue_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blueColor</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@blue_view</span><span class="p">)</span>
+
+  <span class="kp">true</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Let&#39;s walk this out. We create a <code>UIWindow</code> instance with the dimensions of the screen and do something called <code>makeKeyAndVisible</code>. This basically tells the OS that this window will be the one receiving touch events and that it should become visible on the screen. (if you&#39;re curious, you can have multiple windows on multiple screens, but let&#39;s take it one small step at a time).</p>
+
+<p>So we create a window, then we create a new view and add it as a subview to the window. The view&#39;s frame is actually stored as a <code>CGRect</code> object, generated using <code>CGRectMake(x, y, w, h)</code>. BUT WATCH OUT! A <code>CGRect</code> is actually a composition of two objects: a <code>CGPoint</code> and <code>CGSize</code>. So if you want to read the y-coordinate or height of a view, you do <code>view.frame.position.y</code> or <code>view.frame.size.height</code>.</p>
+
+<p>Also shown is <code>UIColor</code>, which is how we play with...colors. It has some obvious defaults (<code>blueColor</code>, <code>redColor</code>, etc), but can also be used to create arbitrary tints.</p>
+
+<p><strong>FULL DISCLOSURE</strong>: adding lone <code>UIView</code>s directly to the <code>UIWindow</code> is generally not a great idea and is frowned upon, but it&#39;s a nice way to learn. So don&#39;t do it in production code.</p>
+
+<p>Run our app (just <code>rake</code>, remember?) and observe our...blue box.</p>
+
+<p><img src="images/1.png" alt="blue box"></p>
+
+<p>Let&#39;s make it more exciting by...adding more boxes! Like so:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="vi">@blue_view</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">CGRectMake</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+  <span class="vi">@blue_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blueColor</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@blue_view</span><span class="p">)</span>
+
+  <span class="vi">@green_view</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">CGRectMake</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
+  <span class="vi">@green_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">greenColor</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@green_view</span><span class="p">)</span>
+
+  <span class="vi">@red_view</span>  <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">CGRectMake</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
+  <span class="vi">@red_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">redColor</span>
+  <span class="c1"># NOTE: *not* adding to @window</span>
+  <span class="vi">@blue_view</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@red_view</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p><code>rake</code> again and a-ha! See how the red view is further down than the green view, despite seemingly identical <code>frame</code>s?</p>
+
+<p><img src="images/2.png" alt="more boxes"></p>
+
+<p>Just for fun, let&#39;s play with our interactive <code>REPL</code>. The terminal where you ran <code>rake</code> should be displaying an <code>irb</code>-esque prompt while the simulator is open. Let&#39;s dig around and find our <code>@blue_view</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="o">&gt;</span> <span class="n">delegate</span> <span class="o">=</span> <span class="no">UIApplication</span><span class="o">.</span><span class="n">sharedApplication</span><span class="o">.</span><span class="n">delegate</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;AppDelegate&gt;</span>
+<span class="o">&gt;</span> <span class="n">blue_view</span> <span class="o">=</span> <span class="n">delegate</span><span class="o">.</span><span class="n">instance_variable_get</span><span class="p">(</span><span class="s1">&#39;@blue_view&#39;</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;UIView&gt;</span>
+</code></pre>
+</div>
+
+<p>What did we do there? Well <code>UIApplication.sharedApplication</code> gives us the object the system uses to describe our application. There will only ever be one of these. Like I said earlier, it&#39;s been configured to use our delegate, which is found (conveniently, I know) with <code>.delegate</code>. Once we grab that, we simply use the nifty <code>instance_variable_get</code> to retrieve our view.</p>
+
+<p>We can confirm that the view has one subview with <code>blue_view.subviews.count</code>. Let&#39;s grab our <code>red_view</code> and do something maniacal: remove it.</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="o">&gt;</span> <span class="n">blue_view</span><span class="o">.</span><span class="n">subviews</span><span class="o">.</span><span class="n">count</span>
+<span class="o">=&gt;</span> <span class="mi">1</span>
+<span class="o">&gt;</span> <span class="n">red_view</span> <span class="o">=</span> <span class="n">blue_view</span><span class="o">.</span><span class="n">subviews</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;UIView&gt;</span>
+<span class="o">&gt;</span> <span class="n">red_view</span><span class="o">.</span><span class="n">removeFromSuperview</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;UIView&gt;</span>
+</code></pre>
+</div>
+
+<p>&quot;Whoa&quot; there Neo, it disappeared. The <code>removeFromSuperview</code> method is how a view can remove itself from the screen and it&#39;s parent view&#39;s <code>subviews</code> (you can confirm this by checking <code>blue_view.subviews.count</code> again).</p>
+
+<h2 id="toc_7">Wrap Up</h2>
+
+<p>This wasn&#39;t a very lengthy example, but it covers the core concepts of views: they have frames and they have subviews. This was simple, but as you&#39;ll see they get much more complicated. Thus, we need some better infrastructure for dealing with them.</p>
+
+<p>Let&#39;s recap:</p>
+
+<ul>
+<li>Everything on the screen is a <code>UIView</code>.</li>
+<li>The base view of your app is an instance of <code>UIWIndow</code>, of which everything is a child or descendent view. Create this in your delegate.</li>
+<li>Views have subviews, added with <code>UIView#addSubview</code>. Successive subviews stack on top of each other visually.</li>
+</ul>
+
+<p><a href="/3-controllers">Moonwalk to the next chapter and get your hands dirty with Controllers!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>
