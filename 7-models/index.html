@@ -172,7 +172,7 @@
 
 <p>Pretty nice right? The values in <code>NSUserDefaults</code> are saved as long as your app is installed; if you want to hasten that process, you can call <code>NSUserDefaults.resetStandardUserDefaults</code> to purge all entries.</p>
 
-<p>Now, there&#39;s one caveat: we can&#39;t store any old object in <code>NSUserDefaults</code>. We can either store primitives (like strings, integers, and hashes), or we can use raw data/bytes. Since our <code>User</code> object isn&#39;t a primitive, we have to use data the method. How does that work?</p>
+<p>Now, there&#39;s one caveat: we can&#39;t store any old object in <code>NSUserDefaults</code>. We can either store primitives (like strings, integers, and hashes), or we can use raw data/bytes. Since our <code>User</code> object isn&#39;t a primitive, we have to use the data method. How does that work?</p>
 
 <p>We can put our model through a process called &quot;archiving&quot; using <code>NSKeyedArchiver</code>. This class takes an object and creates an instance of <code>NSData</code> that <code>NSUserDefaults</code> can save. The objects eligible for archiving are known as &quot;<code>NSCoding</code> compliant&quot;. Basically that means they implement two methods which define how to serialize and unserialize themselves using a standard API. If your models don&#39;t implement these methods, they can&#39;t be archived.</p>
 

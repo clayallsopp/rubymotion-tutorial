@@ -124,7 +124,7 @@
 
 <p>Create a brand new RubyMotion project with <code>motion create Tests</code> and <code>cd</code> into it. Remember way back how we discussed the default folders <code>motion create</code> makes? Well, we&#39;re going to take a look at a new one: <code>spec</code>.</p>
 
-<p>RubyMotion loads your tests from the <code>./spec</code> folder, looking at every single <code>*.rb</code> file. When you create a RubyMotion app, by it creates a default test in <code>./spec/main_spec.rb</code> that looks like this:</p>
+<p>RubyMotion loads your tests from the <code>./spec</code> folder, looking at every single <code>*.rb</code> file. When you create a RubyMotion app, it creates a default test in <code>./spec/main_spec.rb</code> that looks like this:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="n">describe</span> <span class="s2">&quot;Application &#39;Tests&#39;&quot;</span> <span class="k">do</span>
   <span class="n">before</span> <span class="k">do</span>
     <span class="vi">@app</span> <span class="o">=</span> <span class="no">UIApplication</span><span class="o">.</span><span class="n">sharedApplication</span>
@@ -207,7 +207,7 @@
 
 <p>Pretty normal <code>UIButton</code> pattern, except one new thing: <code>accessibilityLabel</code>.</p>
 
-<p><code>accessibilityLabel</code> is a string property available for every <code>UIView</code>. It&#39;s used by the operating system as the audible text to read aloud when someone uses the device&#39;s VoiceOver functionality (so don&#39;t fill it with garbage). Why are we introducing this now? Because RubyMotion&#39;s functional tests look up views by their <code>accesibilityLabel</code>, which ensures that views you&#39;re testing have been added to the hierarchy and don&#39;t just exist somewhere in memory.</p>
+<p><code>accessibilityLabel</code> is a string property available for every <code>UIView</code>. It&#39;s used by the operating system as the audible text to read aloud when someone uses the device&#39;s VoiceOver functionality (so don&#39;t fill it with garbage). Why are we introducing this now? Because RubyMotion&#39;s functional tests look up views by their <code>accessibilityLabel</code>, which ensures that views you&#39;re testing have been added to the hierarchy and don&#39;t just exist somewhere in memory.</p>
 
 <p>Finally we need to actually hook this controller up to our window in <code>AppDelegate</code>:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
@@ -240,7 +240,7 @@
 
 <p><code>tests &lt;class&gt;</code> links our <code>describe</code> to a specific <code>UIViewController</code> class. It does something really neat: it will instanstiate the tested controller with a new <code>UIWindow</code>. We can access the window and controller inside the tests with <code>self.window</code> and <code>self.controller</code>, respectively. This ensures that there&#39;s no junk UI or state lying around which could corrupt our procedures.</p>
 
-<p>So we set the spec to test our controller and start our assertions in the <code>it</code> block. Our other new toy is <code>tap</code>. <code>tap</code> will take as its first argument either a raw <code>UIView</code> <em>or</em> an accessibility label. By default, <code>UIButton</code>s and <code>UILabel</code>s will use their <code>title</code> as the accessibility label; we overrode that in our implementation to prove explicitly show how we can access most other views in tests.</p>
+<p>So we set the spec to test our controller and start our assertions in the <code>it</code> block. Our other new toy is <code>tap</code>. <code>tap</code> will take as its first argument either a raw <code>UIView</code> <em>or</em> an accessibility label. By default, <code>UIButton</code>s and <code>UILabel</code>s will use their <code>title</code> as the accessibility label; we overrode that in our implementation to explicitly show how we can access most other views in tests.</p>
 
 <p>In addition to <code>tap</code> we can also use <code>flick</code>, <code>drag</code>, <code>pinch_close</code>, <code>pinch_open</code>, and <code>rotate</code>. Check out RubyMotion&#39;s <a href="http://www.rubymotion.com/developer-center/articles/testing/#_view_events">full documentation</a> for the details on each.</p>
 
@@ -260,7 +260,7 @@
 <li>Tests are collections of <code>describe</code> and <code>it</code> blocks. These both take one a label argument which helps group alike tests.</li>
 <li>Use <code>&lt;any object&gt;.should</code> to assert equality. Example: <code>greeting.should == &quot;hello&quot;</code></li>
 <li><code>UIViewController</code>s have functional tests, which let us simulate events like <code>tap</code> and <code>pinch</code>. In your <code>describe</code> block, use the <code>tests &lt;controller class&gt;</code> function to enable these features.</li>
-<li><code>tap &lt;accesibility label&gt;</code> programatically taps the view with its <code>accessibilityLabel</code> property set to the argument.</li>
+<li><code>tap &lt;accessibility label&gt;</code> programmatically taps the view with its <code>accessibilityLabel</code> property set to the argument.</li>
 </ul>
 
 <p><a href="/9-http">Qwop over to the next chapter to see how to run HTTP requests!</a></p>

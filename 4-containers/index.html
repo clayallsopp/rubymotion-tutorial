@@ -174,7 +174,7 @@
 
 <p>Make more sense now? When the user taps the bar button, <code>push</code> gets called on the <code>target</code>, which in this case is our controller.</p>
 
-<p>In addition to <code>navigationItem</code>, <code>UIViewController</code>s also have a propery for their <code>navigationController</code>, if available. On the nav controller we call <code>pushViewController</code> which pushes the passed controller onto the stack. By default, the navigation controller will also show a back button which handles popping the current controller for us (normally we call <code>popViewControllerAnimated:</code> on the navigation controller). Kind of neat, right?</p>
+<p>In addition to <code>navigationItem</code>, <code>UIViewController</code>s also have a property for their <code>navigationController</code>, if available. On the nav controller we call <code>pushViewController</code> which pushes the passed controller onto the stack. By default, the navigation controller will also show a back button which handles popping the current controller for us (normally we call <code>popViewControllerAnimated:</code> on the navigation controller). Kind of neat, right?</p>
 
 <p>Let&#39;s have one last bit of fun before we run the app. Have the controller&#39;s title reflect its position in the navigation stack, like so:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">viewDidLoad</span>
@@ -195,7 +195,7 @@
 
 <p><img src="images/tab_bar.png" alt="Navigation controller in Mail.app"></p>
 
-<p>Tab controllers are a lot like <code>UINavigationController</code> and other container controllers: it has a list of <code>viewControllers</code> which are presented within the container&#39;s &quot;chrome&quot; (the black bar). However, unlike the other containers, <code>UITabBarController</code>s are only supposed act as the <code>rootViewController</code> of the window (i.e. you shouldn&#39;t push a tab bar controller inside a navigation controller).</p>
+<p>Tab controllers are a lot like <code>UINavigationController</code> and other container controllers: it has a list of <code>viewControllers</code> which are presented within the container&#39;s &quot;chrome&quot; (the black bar). However, unlike the other containers, <code>UITabBarController</code>s are only supposed to act as the <code>rootViewController</code> of the window (i.e. you shouldn&#39;t push a tab bar controller inside a navigation controller).</p>
 
 <p>In <code>AppDelegate</code>, let&#39;s make a small change:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
