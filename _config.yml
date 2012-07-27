@@ -2,3 +2,4 @@ markdown: redcarpet2
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables",     "with_toc_data"]
 permalink: /:title
+exclude: ['Colr', 'Tests', 'KeyValueFun', 'Animations', 'Tables', 'Containers', 'Controllers', 'Views', 'more-tables']
