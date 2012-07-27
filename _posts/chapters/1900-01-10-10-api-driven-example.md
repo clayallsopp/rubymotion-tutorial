@@ -8,7 +8,7 @@ categories:
 
 # API Driven Example: Colr
 
-We're going to build a front-end for the [Colr JSON API][colr]. Our users can type in a color hex code (i.e. "#3B5998") and then see what tags Colr users have assigned to that color. If our user is feeling particularly adventerous, they can add a new tag!
+We're going to build a front-end for the [Colr JSON API][colr]. Our users can type in a color hex code (i.e. "#3B5998") and then see what tags Colr users have assigned to that color. If our user is feeling particularly adventurous, they can add a new tag!
 
 Let's talk about high-level architecture. We need two controllers: one for search, and one for a color. These should be wrapped inside a `UINavigationController`, our top level controller. We're also going to need some models: `Color` and `Tag`. I'm going to be honest: our app won't be the next top post on Dribbble, but it will work.
 
@@ -18,7 +18,7 @@ Let's talk about high-level architecture. We need two controllers: one for searc
 
 ## Models
 
-First lets dig into our models. The Colr API returns its colors as JSON objects as the form:
+First let's dig into our models. The Colr API returns its colors as JSON objects as the form:
 
 ```
 {
@@ -160,7 +160,7 @@ Good start! Time to fill in our `SearchController`.
 
 ## SearchController
 
-We're going to add a new type of control we haven't used, `UITextField`, to retreive the hex code from the user. When the user pushes a "Search" button, we'll run the appropriate API request and lock the UI until it finishes. If we found a result, we'll push a new `ColorController`; else, we'll show a sad alert. Sound gravy?
+We're going to add a new type of control we haven't used, `UITextField`, to retrieve the hex code from the user. When the user pushes a "Search" button, we'll run the appropriate API request and lock the UI until it finishes. If we found a result, we'll push a new `ColorController`; else, we'll show a sad alert. Sound gravy?
 
 We can setup our views in `SearchController` using something like this:
 
@@ -189,7 +189,7 @@ We can setup our views in `SearchController` using something like this:
   end
 ```
 
-A lot of the specific positioning (`self.view.frame.size.height / 2 - 100`) are based on my personal guess and check, there's not special magic going on (unfortunately). Some new bits are `UIControlStateDisabled`, which corresponds to what the button looks like if we do `@search.enabled = false`, and `UITextBorderStyleRoundedRect`, which is a nice-looking style of `UITextField`s.
+A lot of the specific positioning (`self.view.frame.size.height / 2 - 100`) are based on my personal guess and check, there's no special magic going on (unfortunately). Some new bits are `UIControlStateDisabled`, which corresponds to what the button looks like if we do `@search.enabled = false`, and `UITextBorderStyleRoundedRect`, which is a nice-looking style of `UITextField`s.
 
 `rake` now and get a feel for our interface:
 
@@ -239,7 +239,7 @@ class Color
 end
 ```
 
-Look bad? We use the basic `HTTP.get` to get some data from the server via the proper API URL. Note that we use the `&block` notation to make it plain that this function is intended to be used with a block. This block isn't explicility passed as another argument, but rather is implicilty passed when we put a `do/end` after we call the method. The number and order of variables in `.call(some, variables)` corresponds to `do |some, variables|`.
+Look bad? We use the basic `HTTP.get` to get some data from the server via the proper API URL. Note that we use the `&block` notation to make it plain that this function is intended to be used with a block. This block isn't explicitly passed as another argument, but rather is implicilty passed when we put a `do/end` after we call the method. The number and order of variables in `.call(some, variables)` corresponds to `do |some, variables|`.
 
 Anyway, `rake` and give it a go with a color like "3B5998". You should see something like this output in the console:
 
@@ -247,7 +247,7 @@ Anyway, `rake` and give it a go with a color like "3B5998". You should see somet
 (main)> "{\"colors\": [{\"timestamp\": 1285886579, \"hex\": \"ff00ff\", \"id\": 3976, \"tags\": [{\"timestamp\": 1108110851, \"id\": 2583, \"name\": \"fuchsia\"}, {\"timestamp\": 1108110864, \"id\": 3810, \"name\": \"magenta\"}, {\"timestamp\": 1108110870, \"id\": 4166, \"name\": \"magic\"}, {\"timestamp\": 1108110851, \"id\": 2626, \"name\": \"pink\"}, {\"timestamp\": 1240447803, \"id\": 24479, \"name\": \"rgba8b24ff00ff\"}, {\"timestamp\": 1108110864, \"id\": 3810, \"name\": \"magenta\"}]}], \"schemes\": [], \"schemes_history\": {}, \"success\": true, \"colors_history\": {\"ff00ff\": [{\"d_count\": 0, \"id\": \"4166\", \"a_count\": 1, \"name\": \"magic\"}, {\"d_count\": 0, \"id\": \"2626\", \"a_count\": 1, \"name\": \"pink\"}, {\"d_count\": 0, \"id\": \"24479\", \"a_count\": 1, \"name\": \"rgba8b24ff00ff\"}, {\"d_count\": 0, \"id\": \"3810\", \"a_count\": 1, \"name\": \"magenta\"}]}, \"messages\": [], \"new_color\": \"ff00ff\"}\n"
 ```
 
-Hey...that looks an awful like JSON, doesn't it? (if you didn't notice the "/json/" in the URL). Wouldn't it be great if we could parse that into a normal Ruby hash?
+Hey...that looks an awful lot like JSON, doesn't it? (if you didn't notice the "/json/" in the URL). Wouldn't it be great if we could parse that into a normal Ruby hash?
 
 BubbleWrap to the rescue again! Our nifty friend also has a `BW::JSON.parse` method which does exactly what it sounds like. Let's update `Color.find` to use it:
 
@@ -293,7 +293,7 @@ And in our `SearchController`, our callback can adapt appropriately if we got an
   end
 ```
 
-This seems pretty reasonable. We parse the JSON, check for the non-existentant/-1 id, and alter the UI accordingly:
+This seems pretty reasonable. We parse the JSON, check for the non-existent/-1 id, and alter the UI accordingly:
 
 ![search controller in app](images/2.png)
 
@@ -336,8 +336,7 @@ Next, let's layout our interface:
 
     # A light grey background to separate the Tag table from the Color info
     @info_container = UIView.alloc.initWithFrame [[0, 0], [self.view.frame.size.width, 110]]
-    # need to guarantee .hex is a String
-    @color_view.backgroundColor = String.new(self.color.hex).to_color
+    @info_container.backgroundColor = UIColor.lightGrayColor
     self.view.addSubview @info_container
 
     # A visual preview of the actual color

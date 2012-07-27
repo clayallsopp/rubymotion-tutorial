@@ -111,7 +111,7 @@ It *looks* just like the old one, but its behavior is quite a bit different, no?
 
 So that covers basic iOS animations. What all did we go over?
 
-- Animations work by changing views' properties in the `animations:` lambda of `animateWithDuration:animations:` and it's variants
+- Animations work by changing views' properties in the `animations:` lambda of `animateWithDuration:animations:` and its variants
 - Animations are guided by "animation curves"; examples include UIViewAnimationOptionCurveLinear and UIViewAnimationOptionCurveEaseInOut
 
 [Do a barrel roll to our next chapter and learn about Models!](/7-models)
