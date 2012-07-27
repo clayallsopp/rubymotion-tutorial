@@ -77,7 +77,7 @@ Anyway, `target` is the object you want to call the `action` function on. Let's 
 
 Make more sense now? When the user taps the bar button, `push` gets called on the `target`, which in this case is our controller.
 
-In addition to `navigationItem`, `UIViewController`s also have a propery for their `navigationController`, if available. On the nav controller we call `pushViewController` which pushes the passed controller onto the stack. By default, the navigation controller will also show a back button which handles popping the current controller for us (normally we call `popViewControllerAnimated:` on the navigation controller). Kind of neat, right?
+In addition to `navigationItem`, `UIViewController`s also have a property for their `navigationController`, if available. On the nav controller we call `pushViewController` which pushes the passed controller onto the stack. By default, the navigation controller will also show a back button which handles popping the current controller for us (normally we call `popViewControllerAnimated:` on the navigation controller). Kind of neat, right?
 
 Let's have one last bit of fun before we run the app. Have the controller's title reflect its position in the navigation stack, like so:
 
@@ -99,7 +99,7 @@ Now, I said we'd cover `UITabController`s too, so let's get to it.
 
 ![Navigation controller in Mail.app](images/tab_bar.png)
 
-Tab controllers are a lot like `UINavigationController` and other container controllers: it has a list of `viewControllers` which are presented within the container's "chrome" (the black bar). However, unlike the other containers, `UITabBarController`s are only supposed act as the `rootViewController` of the window (i.e. you shouldn't push a tab bar controller inside a navigation controller).
+Tab controllers are a lot like `UINavigationController` and other container controllers: it has a list of `viewControllers` which are presented within the container's "chrome" (the black bar). However, unlike the other containers, `UITabBarController`s are only supposed to act as the `rootViewController` of the window (i.e. you shouldn't push a tab bar controller inside a navigation controller).
 
 In `AppDelegate`, let's make a small change:
 
