@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Containers
+description: Learn the basic UINavigationController and UITabBarController container controllers.
 categories:
 - chapters
 ---

@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Controllers
+description: Use UIViewControllers to organize your app
 categories:
 - chapters
 ---

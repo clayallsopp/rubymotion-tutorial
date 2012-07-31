@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Hello Motion
+description: Learn the installation and project setup of RubyMotion, then make your first iOS app
 categories:
 - chapters
 ---

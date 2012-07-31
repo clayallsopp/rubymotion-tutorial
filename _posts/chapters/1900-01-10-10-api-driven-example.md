@@ -2,6 +2,7 @@
 layout: default
 title: API Driven Example
 full_title: An API-Driven Example
+description: A complete RubyMotion example app using HTTP to access a remote API
 categories:
 - chapters
 ---

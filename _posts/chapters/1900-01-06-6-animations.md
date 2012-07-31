@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Animations
+description: Animate UIViews in RubyMotion with CoreAnimation
 categories:
 - chapters
 ---
