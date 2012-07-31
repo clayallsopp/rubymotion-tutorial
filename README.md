@@ -8,6 +8,5 @@
 
 ### Installation
 
-1. `gem install jekyll`
-2. `gem install redcarpet` (used for improved markdown parsing)
+1. `bundle install`
 3. `sudo easy_install Pygments` (used for syntax highlighting)
