@@ -10,7 +10,7 @@ categories:
 
 Now that we have a big white screen on our hands, let's dress it up.
 
-If you've used more than a handful of iOS apps, you've undoubtedly noticed some visual similarities. Primarily, many apps a black bottom bar with tabs and a blue top bar with a title. These are the standard "containers" in iOS, known as `UITabBarController` and `UINavigationController` respectively. We're going to play with them.
+If you've used more than a handful of iOS apps, you've undoubtedly noticed some visual similarities. Primarily, many apps have a black bottom bar with tabs and a blue top bar with a title. These are the standard "containers" in iOS, known as `UITabBarController` and `UINavigationController` respectively. We're going to play with them.
 
 These containers are `UIViewController` subclasses which actually manage other `UIViewController`s. Kind of wild, right? They have a `view` just like regular controllers, to which these "children" controllers' views are added as subviews. Thankfully, we never really have to worry about *how* that works, as these container controllers have pleasant APIs that deal with controllers, not views.
 
