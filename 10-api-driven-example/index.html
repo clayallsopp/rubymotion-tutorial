@@ -427,7 +427,7 @@
     <span class="c1"># A visual preview of the actual color</span>
     <span class="vi">@color_view</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="o">]]</span>
     <span class="c1"># String#to_color is another handy BubbbleWrap addition!</span>
-    <span class="vi">@color_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span><span class="o">.</span><span class="n">to_color</span>
+    <span class="vi">@color_view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="nb">String</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span><span class="p">)</span><span class="o">.</span><span class="n">to_color</span>
     <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@color_view</span>
 
     <span class="c1"># Displays the hex code of our color</span>

@@ -132,11 +132,11 @@
 <span class="k">end</span>
 
 <span class="c1"># BW is alias for BubbleWrap</span>
-<span class="no">BW</span><span class="ss">:HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://www.bing.com/search&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="p">{</span><span class="n">q</span><span class="p">:</span> <span class="s2">&quot;some query&quot;</span><span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+<span class="no">BW</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://www.bing.com/search&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="p">{</span><span class="n">q</span><span class="p">:</span> <span class="s2">&quot;some query&quot;</span><span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
   <span class="c1"># sends request to http://www.bing.com/search?q=some+query</span>
 <span class="k">end</span>
 
-<span class="no">BW</span><span class="ss">:HTTP</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;https://graph.facebook.com/123123123/comments&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="p">{</span><span class="n">message</span><span class="p">:</span> <span class="s2">&quot;This is a comment&quot;</span><span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
+<span class="no">BW</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;https://graph.facebook.com/123123123/comments&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="p">{</span><span class="n">message</span><span class="p">:</span> <span class="s2">&quot;This is a comment&quot;</span><span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">response</span><span class="o">|</span>
   <span class="c1"># sends request to https://graph.facebook.com/123123123/comments</span>
   <span class="c1"># with body params `message=This is a comment`</span>
 <span class="k">end</span>
