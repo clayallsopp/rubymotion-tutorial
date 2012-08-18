@@ -343,7 +343,7 @@ Next, let's layout our interface:
     # A visual preview of the actual color
     @color_view = UIView.alloc.initWithFrame [[10, 10], [90, 90]]
     # String#to_color is another handy BubbbleWrap addition!
-    @color_view.backgroundColor = self.color.hex.to_color
+    @color_view.backgroundColor = String.new(self.color.hex).to_color
     self.view.addSubview @color_view
 
     # Displays the hex code of our color
