@@ -49,7 +49,7 @@ Sweet. Now let's make it do something. We're going to add a navigation bar butto
 
 You can actually put buttons in the navigation bar at the top of the screen. For example, Mail.app does this for the "Edit" button. These buttons are instances of `UIBarButtonItem`, which has loads of configuration options (want to use text? an image? a system icon? all sorts of fun stuff).
 
-In `TapsController`, add the button in `viewDidLoad`:
+In `TapController`, add the button in `viewDidLoad`:
 
 ```ruby
 def viewDidLoad
