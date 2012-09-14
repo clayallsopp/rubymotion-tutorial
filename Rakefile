@@ -19,7 +19,7 @@ task :deploy do
   system 'git status'
   msg = `git status`
   system 'git add .'
-  system 'git commit -m "Sync gh-pages \n #{msg}"'
+  system "git commit -m 'Sync gh-pages \n #{msg}'"
   system 'git push origin gh-pages'
   system 'git checkout master'
   system 'rm -rf ../_site'
