@@ -118,7 +118,7 @@ See what we added? First, those three lines about a `UIAlertView`. `UIAlertView`
 
 Next, `puts` is your basic logging statement. You can pass it a normal string to print, or any normal object which you want to some information about.
 
-Run `rake` again and...BAM, an unclossable blue popup! And in your terminal window, you should see "Hello again!" output in the console. Not a whole lot going on, but...at least now we know how it all got there.
+Run `rake` again and...BAM, an unclosable blue popup! And in your terminal window, you should see "Hello again!" output in the console. Not a whole lot going on, but...at least now we know how it all got there.
 
 ![hello](images/1.png)
 
