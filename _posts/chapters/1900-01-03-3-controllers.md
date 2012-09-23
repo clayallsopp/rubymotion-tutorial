@@ -44,7 +44,7 @@ class TapController < UIViewController
 end
 ```
 
-`viewDidLoad` is one of those "lifecycle" methods of `UIViewController`, which is called after `self.view` has been created and is ready for subviews to be added. For now, we just make it's background color red and call it a day.
+`viewDidLoad` is one of those "lifecycle" methods of `UIViewController`, which is called after `self.view` has been created and is ready for subviews to be added. For now, we just make its background color red and call it a day.
 
 You *absolutely*, *must*, *without question* call `super` in `viewDidLoad`, or else bad things will happen. Got it? Cool.
 
@@ -64,7 +64,7 @@ class AppDelegate
 end
 ```
 
-See the `rootViewController=` call? The window will take the given `UIViewController` and adjust its `view`'s size to fits the window. *This* is the better way of setting up your window (as opposed to `window.addSubview` everywhere).
+See the `rootViewController=` call? The window will take the given `UIViewController` and adjust its `view`'s size to fit the window. *This* is the better way of setting up your window (as opposed to `window.addSubview` everywhere).
 
 The other new part of that line is `initWithNibName:bundle:`. Typically, this is used to load a controller from a `NIB` file. `NIB`s are created using Xcode's Interface Builder as a way of visually constructing your view. Since we aren't using Interface Builder for our controller, we can safely pass nil for both arguments.
 
