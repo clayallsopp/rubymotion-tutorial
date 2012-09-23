@@ -141,7 +141,7 @@
 </code></pre>
 </div>
 
-<p>Let&#39;s walk this out. We create a <code>UIWindow</code> instance with the dimensions of the screen and do something called <code>makeKeyAndVisible</code>. This basically tells the OS that this window will be the one receiving touch events and that it should become visible on the screen. (if you&#39;re curious, you can have multiple windows on multiple screens, but let&#39;s take it one small step at a time).</p>
+<p>Let&#39;s walk this out. We create a <code>UIWindow</code> instance with the dimensions of the screen and do something called <code>makeKeyAndVisible</code>. This basically tells the OS that this window will be the one receiving touch events and that it should become visible on the screen. (If you&#39;re curious, you can have multiple windows on multiple screens, but let&#39;s take it one small step at a time).</p>
 
 <p>So we create a window, then we create a new view and add it as a subview to the window. The view&#39;s frame is actually stored as a <code>CGRect</code> object, generated using <code>CGRectMake(x, y, w, h)</code>. BUT WATCH OUT! A <code>CGRect</code> is actually a composition of two objects: a <code>CGPoint</code> and <code>CGSize</code>. So if you want to read the y-coordinate or height of a view, you do <code>view.frame.position.y</code> or <code>view.frame.size.height</code>.</p>
 
@@ -195,7 +195,7 @@
 </code></pre>
 </div>
 
-<p>&quot;Whoa&quot; there Neo, it disappeared. The <code>removeFromSuperview</code> method is how a view can remove itself from the screen and it&#39;s parent view&#39;s <code>subviews</code> (you can confirm this by checking <code>blue_view.subviews.count</code> again).</p>
+<p>&quot;Whoa&quot; there Neo, it disappeared. The <code>removeFromSuperview</code> method is how a view can remove itself from the screen and its parent view&#39;s <code>subviews</code> (you can confirm this by checking <code>blue_view.subviews.count</code> again).</p>
 
 <h2 id="toc_7">Wrap Up</h2>
 

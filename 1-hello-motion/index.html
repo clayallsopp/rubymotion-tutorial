@@ -147,7 +147,7 @@
 
 <p>So we <code>require &#39;motion/project&#39;</code>, which gives us proper access to RubyMotion and setting up our app in the <code>.setup</code> block. There are all sorts of properties for <code>app</code>, which as the auto-generated comment says can be listed using <code>rake config</code>. By default, RubyMotion sets the <code>.name</code> to our project&#39;s name, so that looks good.</p>
 
-<p>Wait, why do we have a <code>Rakefile</code> at all? Well, RubyMotion uses <code>rake</code> for all of it&#39;s functions, and the <code>rake</code> command runs the <code>Rakefile</code> in directory you run it in. The <code>Rakefile</code> is supposed to define the set of &quot;tasks&quot; which can be attached to rake (<code>rake &lt;task&gt;</code>), but these are actually created for us when we <code>require &quot;motion/project&quot;</code>.</p>
+<p>Wait, why do we have a <code>Rakefile</code> at all? Well, RubyMotion uses <code>rake</code> for all of its functions, and the <code>rake</code> command runs the <code>Rakefile</code> in directory you run it in. The <code>Rakefile</code> is supposed to define the set of &quot;tasks&quot; which can be attached to rake (<code>rake &lt;task&gt;</code>), but these are actually created for us when we <code>require &quot;motion/project&quot;</code>.</p>
 
 <p>Give it a go! Run <code>rake</code> in your terminal and you should have a blank iPhone simulator pop up. Additionally, your terminal is now running an interactive console in which you can execute new code on the fly.</p>
 
@@ -215,7 +215,7 @@
 
 <p>Next, <code>puts</code> is your basic logging statement. You can pass it a normal string to print, or any normal object which you want to some information about.</p>
 
-<p>Run <code>rake</code> again and...BAM, an unclossable blue popup! And in your terminal window, you should see &quot;Hello again!&quot; output in the console. Not a whole lot going on, but...at least now we know how it all got there.</p>
+<p>Run <code>rake</code> again and...BAM, an unclosable blue popup! And in your terminal window, you should see &quot;Hello again!&quot; output in the console. Not a whole lot going on, but...at least now we know how it all got there.</p>
 
 <p><img src="images/1.png" alt="hello"></p>
 
@@ -224,7 +224,7 @@
 <ul>
 <li>Create RubyMotion apps with <code>motion create &lt;ProjectName&gt;</code></li>
 <li>Configure your app and import libraries inside <code>Rakefile</code></li>
-<li>Apps need a delegate, and RubyMotion needs you to set it&#39;s value (or use the default) in the <code>Rakefile</code></li>
+<li>Apps need a delegate, and RubyMotion needs you to set its value (or use the default) in the <code>Rakefile</code></li>
 <li>App delegates use <code>application:didFinishLaunchingWithOptions:</code> as the first entry point.</li>
 <li>Run your app using <code>rake</code> while inside the project directory.</li>
 </ul>

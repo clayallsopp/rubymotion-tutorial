@@ -150,7 +150,7 @@
 </code></pre>
 </div>
 
-<p><code>viewDidLoad</code> is one of those &quot;lifecycle&quot; methods of <code>UIViewController</code>, which is called after <code>self.view</code> has been created and is ready for subviews to be added. For now, we just make it&#39;s background color red and call it a day.</p>
+<p><code>viewDidLoad</code> is one of those &quot;lifecycle&quot; methods of <code>UIViewController</code>, which is called after <code>self.view</code> has been created and is ready for subviews to be added. For now, we just make its background color red and call it a day.</p>
 
 <p>You <em>absolutely</em>, <em>must</em>, <em>without question</em> call <code>super</code> in <code>viewDidLoad</code>, or else bad things will happen. Got it? Cool.</p>
 
@@ -169,7 +169,7 @@
 </code></pre>
 </div>
 
-<p>See the <code>rootViewController=</code> call? The window will take the given <code>UIViewController</code> and adjust its <code>view</code>&#39;s size to fits the window. <em>This</em> is the better way of setting up your window (as opposed to <code>window.addSubview</code> everywhere).</p>
+<p>See the <code>rootViewController=</code> call? The window will take the given <code>UIViewController</code> and adjust its <code>view</code>&#39;s size to fit the window. <em>This</em> is the better way of setting up your window (as opposed to <code>window.addSubview</code> everywhere).</p>
 
 <p>The other new part of that line is <code>initWithNibName:bundle:</code>. Typically, this is used to load a controller from a <code>NIB</code> file. <code>NIB</code>s are created using Xcode&#39;s Interface Builder as a way of visually constructing your view. Since we aren&#39;t using Interface Builder for our controller, we can safely pass nil for both arguments.</p>
 
