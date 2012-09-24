@@ -240,7 +240,7 @@ class Color
 end
 ```
 
-Look bad? We use the basic `HTTP.get` to get some data from the server via the proper API URL. Note that we use the `&block` notation to make it plain that this function is intended to be used with a block. This block isn't explicitly passed as another argument, but rather is implicilty passed when we put a `do/end` after we call the method. The number and order of variables in `.call(some, variables)` corresponds to `do |some, variables|`.
+Look bad? We use the basic `HTTP.get` to get some data from the server via the proper API URL. Note that we use the `&block` notation to make it plain that this function is intended to be used with a block. This block isn't explicitly passed as another argument, but rather is implicitly passed when we put a `do/end` after we call the method. The number and order of variables in `.call(some, variables)` corresponds to `do |some, variables|`.
 
 Anyway, `rake` and give it a go with a color like "3B5998". You should see something like this output in the console:
 
