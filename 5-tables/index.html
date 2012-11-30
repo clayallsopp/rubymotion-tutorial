@@ -1,0 +1,316 @@
+
+<!doctype html>
+  <head>
+    <title> Tables |  RubyMotion Tutorial</title>
+    <meta name="description" content="Use UITableView to create a fast scrolling list of data" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="all" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="author" content="Clay Allsopp" />
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/bootstrap.min.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/blog/pygments.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/patch.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_15">Tables</h1>
+
+<p>We&#39;ve gone through views, controllers, controller-containers, but now I want to diverge and get a bit more specific. The <code>UITableView</code> class is so central to most iOS apps that it deserves a chapter to itself (and probably several more!).</p>
+
+<p>Look through the default apps that come on your phone or iPad and you&#39;ll see a trend even more universal than blue and black bars: scrolling lists. And boy do they scroll, right? Phone.app can fling through an enormous list of contacts with creamy ease; SMS.app practically flies through your blue and green bubbly messages. They look quite different but they&#39;re built with the same tool: <code>UITableView</code>.</p>
+
+<p><img src="images/table_view.png" alt="UITableView"></p>
+
+<p><code>UITableView</code> is built for scrolling content which is alike in presentation but encompasses dozens to thousands of items. The trick that lets it scale from nine to nine hundred items is that it only actually uses a fixed constant of subviews in memory at any given time. That sounds complicated, so I&#39;ll break it down.</p>
+
+<p>In your Mail.app, you could have hundreds of emails in your inbox but only a portion of them are on screen at any given time (about six). When you scroll, the topmost emails slowly move offscreen. The table view will actually take these hidden views and move them to the <em>opposite</em> end of the screen. So those message views that move off the top of the screen, get repositioned below the screen, and have their content replaced with the appropriate data for that new position. The table view moves its rows around incredibly fast, so even if there are hundreds of items in your table, only a handful of row views are kept in memory.</p>
+
+<p>Makes more sense, I hope.</p>
+
+<p>So, how do we take advantage of this awesome class? <code>UITableView</code> is a view like any other <code>UIView</code>, so we have to add it as a subview with the appropriate frame. We also need to assign it <code>delegate</code> and <code>dataSource</code> objects. These objects (or, more commonly, object) absolutely must implement a few methods, with the option to implement more. The table view will then call these methods on the objects to get the information it needs to draw all of its rows. Doesn&#39;t sound bad, right? Let&#39;s get to the code.</p>
+
+<p>Remember that &quot;other&quot; <code>UIViewController</code> we made in the <a href="/4-containers">Containers</a> chapter? We&#39;re going to replace that with our own controller which uses a <code>UITableView</code> to present a bunch of data. Let&#39;s start by making that controller class.</p>
+
+<p>Create <code>AlphabetController</code> in `./app/controllers/AlphabetController.rb&#39;, filling the initial implementation with:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">AlphabetController</span> <span class="o">&lt;</span> <span class="no">UIViewController</span>
+  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="k">super</span>
+
+    <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Alphabet&quot;</span>
+
+    <span class="vi">@table</span> <span class="o">=</span> <span class="no">UITableView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">addSubview</span> <span class="vi">@table</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Should be familiar stuff by now. However, <code>view.bounds</code> might be a little new. A view&#39;s <code>bounds</code> returns a CGRect, just like <code>view.frame</code>; however, it has an empty origin point. Essentially it&#39;s the description of a view&#39;s size without its position. So when we say <code>newView.initWithFrame(view.bounds)</code>, we&#39;re telling <code>newView</code> to size itself to fill <code>view</code>.</p>
+
+<p>Back in <code>AppDelegate</code>, let&#39;s modify our tab controller to use this new controller:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="n">controller</span> <span class="o">=</span> <span class="no">TapController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="n">nav_controller</span> <span class="o">=</span> <span class="no">UINavigationController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithRootViewController</span><span class="p">(</span><span class="n">controller</span><span class="p">)</span>
+  <span class="n">alphabet_controller</span> <span class="o">=</span> <span class="no">AlphabetController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+
+  <span class="n">tab_controller</span> <span class="o">=</span> <span class="no">UITabBarController</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithNibName</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span> <span class="n">bundle</span><span class="p">:</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="n">tab_controller</span><span class="o">.</span><span class="n">viewControllers</span> <span class="o">=</span> <span class="o">[</span><span class="n">alphabet_controller</span><span class="p">,</span> <span class="n">nav_controller</span><span class="o">]</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">tab_controller</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>All we needed to do is create a new <code>AlphabetController</code> and then place it at the front of <code>tab_controller</code>&#39;s <code>viewControllers</code>. <code>rake</code> and you should see a lovely, but empty, table view:</p>
+
+<p><img src="images/1.png" alt="First table view"></p>
+
+<p>Time to fill in our <code>AlphabetController</code>. First, we need to set our controller as the table&#39;s <code>dataSource</code> at the end of <code>viewDidLoad</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="k">def</span> <span class="nf">viewDidLoad</span>
+    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+    <span class="vi">@table</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="nb">self</span>
+  <span class="k">end</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>The data source must implement the following methods:</p>
+
+<ul>
+<li><code>tableView:cellForRowAtIndexPath:</code></li>
+<li><code>tableView:numberOfRowsInSection:</code></li>
+</ul>
+
+<p>There are actually a bunch of methods it can use (which you can check in <a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UITableViewDataSource_Protocol/Reference/Reference.html">Apple&#39;s docs</a>) but the most basic table view <code>dataSource</code> only needs those. So...let&#39;s define them!</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">cellForRowAtIndexPath</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span>
+    <span class="c1"># return the UITableViewCell for the row</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span><span class="p">:</span> <span class="n">section</span><span class="p">)</span>
+    <span class="c1"># return the number of rows</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p><code>cellForRowAtIndexPath:</code> uses two unfamiliar objects: an <code>NSIndexPath</code> for <code>indexPath</code> and it returns a <code>UITableViewCell</code>. <code>NSIndexPath</code> is an object that has a <code>section</code> and a <code>row</code> property, which in this case is how we find out what row we&#39;re presenting.</p>
+
+<p><code>UITableViewCell</code> is the <code>UIView</code> subclass that actually gets displayed in our table. The default implementation comes with some useful fields, including a <code>textLabel</code> and an <code>imageView</code>. You can subclass <code>UITableViewCell</code> to add a custom look and behavior, but we can get something useful using the normal class.</p>
+
+<p><code>cellForRowAtIndexPath</code> should either create a new cell or recycle an off-screen one, populate it with the data corresponding to <code>indexPath</code>, and return the cell. Here&#39;s what a more complete implementation looks like:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">cellForRowAtIndexPath</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span>
+    <span class="vi">@reuseIdentifier</span> <span class="o">||=</span> <span class="s2">&quot;CELL_IDENTIFIER&quot;</span>
+
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">dequeueReusableCellWithIdentifier</span><span class="p">(</span><span class="vi">@reuseIdentifier</span><span class="p">)</span> <span class="o">||</span> <span class="k">begin</span>
+      <span class="no">UITableViewCell</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithStyle</span><span class="p">(</span><span class="no">UITableViewCellStyleDefault</span><span class="p">,</span> <span class="n">reuseIdentifier</span><span class="ss">:@reuseIdentifier</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="c1"># put your data in the cell</span>
+
+    <span class="n">cell</span>
+  <span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Wait, what&#39;s this <code>reuseIdentifier</code> business? Well, <code>UITableView</code> does its &quot;reuse&quot; magic by giving an identifier to each type of cell used in the table. When you grab a cell for reuse, you actually grab them from a pool of cells with the same identifier. So, if for some reason you had a unique identifier for every row, none of the cells could get reused because there would only ever been one cell in each pool. If you had two visually distinct and totally different types of rows, you would probably have two identifiers. Sound reasonable?</p>
+
+<p>You might not be familiar with the <code>||=</code> operator. In Ruby, <code>a ||= b</code> means &quot;if <code>a</code> is nil/false, then assign it the value of <code>b</code>&quot;. It&#39;s a good way to give a default value to an object, or ensure that it&#39;s only assigned once, as in the example above.</p>
+
+<p>So we use <code>dequeueReusableCellWithIdentifier:</code> to grab a <code>UITableViewCell</code> with that identifier; if we don&#39;t have one (thus the result is <code>nil</code>), we run the <code>begin</code>/<code>end</code> block. This block creates a new <code>UITableViewCell</code> with a style (<a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UITableViewCell_Class/Reference/Reference.html%23//apple_ref/doc/c_ref/UITableViewCell">more described here</a>) and the <code>reuseIdentifier</code> for this cell. At the end of the method, we should return our cell.</p>
+
+<p>If you haven&#39;t guessed, we&#39;re going to populate our table with the letters of the alphabet. It&#39;s not terribly useful or complicated, but it&#39;s easy to setup so we can see the cell reuse in action. Feel free to use a more creative data set :)</p>
+
+<p>In <code>viewDidLoad</code>, let&#39;s initialize an array to use as the titles of our rows. Since Ruby is awesome, we can use a quick one-liner:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">viewDidLoad</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="o">.</span><span class="n">.</span><span class="s2">&quot;Z&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>This will create an array containing all the uppercase letters of the alphabet. Nifty, huh?</p>
+
+<p>Now we need to fill in our two data source methods. <code>numberOfRowsInSection:</code> is pretty straight-forward, since all we&#39;re doing is using <code>@data</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span><span class="p">:</span> <span class="n">section</span><span class="p">)</span>
+  <span class="vi">@data</span><span class="o">.</span><span class="n">count</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>In <code>cellForRowAtIndexPath:</code>, we simply set our cell&#39;s provided <code>textLabel</code> to use the corresponding string in <code>@data</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">cellForRowAtIndexPath</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="vi">@data</span><span class="o">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="o">]</span>
+
+  <span class="n">cell</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Give it a <code>rake</code> and check it:</p>
+
+<p><img src="images/2.png" alt="The alphabet in a table-view"></p>
+
+<p>Not bad right? Let&#39;s do one more thing and add some interactivity.</p>
+
+<p>Remember how I said a <code>UITableView</code> has a <code>dataSource</code> <em>and</em> a <code>delegate</code>? Well let&#39;s make our <code>AlphabetController</code> the <code>delegate</code> too, so it can do something when a row is tapped.</p>
+
+<p>The <code>UITableView</code> <code>dataSource</code> methods are generally about supplying information to a table; the <code>delegate</code> methods concern themselves with how the table looks and how the user interacts with it once the data has loaded. We&#39;ll use one of these <code>delegate</code> methods to detect when a row is tapped by the user, and then we&#39;ll show an alert.</p>
+
+<p>Start by actually making our controller the <code>delegate</code> in <code>viewDidLoad</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">viewDidLoad</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="vi">@table</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="nb">self</span>
+  <span class="vi">@table</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">self</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>There aren&#39;t any required methods of a table&#39;s <code>delegate</code>; you&#39;re free to implement any (or none) for your needs. We&#39;re going to use the <code>delegate</code> method <code>tableView:didSelectRowAtIndexPath:</code> to figure out when a row was tapped by the user, like so:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">tableView</span><span class="p">,</span> <span class="n">didSelectRowAtIndexPath</span><span class="ss">:indexPath</span><span class="p">)</span>
+  <span class="n">tableView</span><span class="o">.</span><span class="n">deselectRowAtIndexPath</span><span class="p">(</span><span class="n">indexPath</span><span class="p">,</span> <span class="n">animated</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+
+  <span class="n">alert</span> <span class="o">=</span> <span class="no">UIAlertView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">init</span>
+  <span class="n">alert</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@data</span><span class="o">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="o">]</span><span class="si">}</span><span class="s2"> tapped!&quot;</span>
+  <span class="n">alert</span><span class="o">.</span><span class="n">addButtonWithTitle</span> <span class="s2">&quot;OK&quot;</span>
+  <span class="n">alert</span><span class="o">.</span><span class="n">show</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>We need to <code>deselectRowAtIndexPath:animated</code> because by default <code>UITableView</code> will keep that row highlighted in blue. But besides that, the rest is stuff we&#39;ve covered.</p>
+
+<p><code>rake</code> and give it a whirl:</p>
+
+<p><img src="images/3.png" alt="Opening a popup when a row is tapped"></p>
+
+<h2 id="toc_16">W-w-w-wrap up</h2>
+
+<p>That covers <code>UITableView</code> basics. You can do a world of customizations and behaviors to make them do really neat things, but I&#39;ll save that for a more in-depth writeup someday.</p>
+
+<p>What did we actually learn today?</p>
+
+<ul>
+<li><code>UITableView</code>s display rows of similar looking data in an efficient manner.</li>
+<li><code>UITableView</code>s have a <code>dataSource</code> for supplying information and a <code>delegate</code> for managing user behavior and look-and-feel.</li>
+<li>The <code>dataSource</code> has two required methods, <code>numberOfRowsInSection</code> and <code>cellForRowAtIndexPath</code>. <code>cellForRowAtIndexPath</code> should return an instance of <code>UITableViewCell</code>, customized for that particular row.</li>
+<li>You can use the <code>delegate</code> method <code>didSelectRowAtIndexPath</code> to determine what happens when a user taps a row.</li>
+</ul>
+
+<p><a href="/6-animations">Swan dive to our next chapter and learn about Animations!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+  <script src='http://clayallsopp.github.com/rubymotion-tutorial/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='http://clayallsopp.github.com/rubymotion-tutorial/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>

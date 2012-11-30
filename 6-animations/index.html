@@ -1,0 +1,240 @@
+
+<!doctype html>
+  <head>
+    <title> Animations |  RubyMotion Tutorial</title>
+    <meta name="description" content="Animate UIViews in RubyMotion with CoreAnimation" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="all" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="author" content="Clay Allsopp" />
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/bootstrap.min.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/blog/pygments.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/patch.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_17">Animations</h1>
+
+<p>When you ask users about the biggest differences between iOS and other mobile operating systems, animations will definitely be one of the top answers. There are fades, flips, spins, bounces, and curls abound in Apple&#39;s apps.</p>
+
+<p>Some of these are prominent in the default UI elements (<code>UINavigationController</code>, <code>UITableView</code>, etc), but what&#39;s really great is that they&#39;re all built upon the very same APIs you and I use. Literally every <code>UIView</code> is animatable with only one line of code. It&#39;s unbelievably great.</p>
+
+<p>So let&#39;s have some fun. We&#39;re going to move a box around the screen. Trust me, the code is as simple as it sounds (which is a good thing!).</p>
+
+<p>We&#39;ll start by adding a view to our <code>window</code> and animating it around a set of points. Since this is relatively short, I&#39;ll just drop all the changes for your <code>AppDelegate</code> right here:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+  <span class="vi">@window</span> <span class="o">=</span> <span class="no">UIWindow</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span><span class="p">(</span><span class="no">UIScreen</span><span class="o">.</span><span class="n">mainScreen</span><span class="o">.</span><span class="n">applicationFrame</span><span class="p">)</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">makeKeyAndVisible</span>
+
+  <span class="c1"># the points we&#39;re going to animate to</span>
+  <span class="vi">@points</span> <span class="o">=</span> <span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="o">]]</span>
+  <span class="vi">@current_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="c1"># usual method of adding views to our window</span>
+  <span class="vi">@view</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[</span><span class="vi">@points</span><span class="o">[</span><span class="vi">@current_index</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="o">]]</span>
+  <span class="vi">@view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="no">UIColor</span><span class="o">.</span><span class="n">blueColor</span>
+  <span class="vi">@window</span><span class="o">.</span><span class="n">addSubview</span><span class="p">(</span><span class="vi">@view</span><span class="p">)</span>
+
+  <span class="n">animate_to_next_point</span>
+
+  <span class="kp">true</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">animate_to_next_point</span>
+  <span class="vi">@current_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+  <span class="c1"># keep current_index in the range [0,3]</span>
+  <span class="vi">@current_index</span> <span class="o">=</span> <span class="vi">@current_index</span> <span class="o">%</span> <span class="vi">@points</span><span class="o">.</span><span class="n">count</span>
+
+  <span class="no">UIView</span><span class="o">.</span><span class="n">animateWithDuration</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">animations</span><span class="p">:</span> <span class="nb">lambda</span> <span class="p">{</span>
+       <span class="vi">@view</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[</span><span class="vi">@points</span><span class="o">[</span><span class="vi">@current_index</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="o">]]</span>
+    <span class="p">},</span>
+    <span class="n">completion</span><span class="ss">:lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">finished</span><span class="o">|</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">animate_to_next_point</span>
+    <span class="p">}</span>
+  <span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>There&#39;s a couple new structures in this code. First, the <code>[[0, 0], [100, 100]]</code> syntax for <code>frame</code>. This nested array structure is shorthand for the <code>CGRectMake</code> we&#39;ve used before; the first sub-array represents the <code>origin</code> point and the second represents the <code>size</code> structure. This is nice because it allows easy use of <code>@points</code> to change the <code>frame</code>.</p>
+
+<p>Second is <code>lambda</code>. If you&#39;re not familar with that terminology, <code>lambda</code>s are traditionally small functions assigned to variables or passed as arguments. For example, you can do <code>my_lambda = lambda { p &quot;Hello!&quot; }</code>. Now when you run <code>my_lambda.call</code>, the code within the <code>lambda</code> block will execute. Your <code>lambda</code> can also have an argument:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="n">my_lambda</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span> <span class="nb">p</span> <span class="s2">&quot;Hello </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">!&quot;</span> <span class="p">}</span>
+<span class="n">my_lambda</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;Clay&quot;</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="no">Hello</span> <span class="no">Clay</span>
+</code></pre>
+</div>
+
+<p>Anyway, back to our example. We create a window like usual and define some points to move our box on. We add our box (<code>@view</code>) to the window and start <code>animate_to_next_point</code>, which is where the proverbial magic happens.</p>
+
+<p>The <code>UIView.animateWithDuration:animations:completion:</code> function is the flux-capacitor of animations: it&#39;s what makes them possible. There are a lot of parts to this function, so let&#39;s take it one at a time.</p>
+
+<p><code>duration</code> sets how long the animations will last, in seconds. You can use float values if you want, like <code>1.85</code>. A good rule of thumb is that &quot;quick&quot; animations should be <code>.3</code> seconds.</p>
+
+<p>Any changes you make to <em>any</em> views in the <code>animations:</code> lambda will animate smoothly. How cool is that!? For comparison, on Android you have to create a custom <code>Animation</code> object for each property you want to animate. Now, there are some properties which aren&#39;t animatable, but common ones like <code>frame</code>, <code>bounds</code>, and <code>alpha</code> work just fine (for a complete list, check <a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/uiview_class/uiview/uiview.html#Overview_section">this</a>). In our case, we set <code>@view.frame</code> to have the next origin in our set of <code>@points</code>.</p>
+
+<p>Finally, <code>completions:</code> is called after your animations finish. You <em>must</em> accept an argument in this lambda; it will be a <code>boolean</code> value which tells you if the animations really did finish. Animations usually fail because they were canceled by other animations, but that only happens when you explicitly coerce it.</p>
+
+<p><code>rake</code> and you&#39;ll see our blue box sliding around the upper left corner of the simulator. Wasn&#39;t that gloriously easy?</p>
+
+<p><img src="images/1.png" alt="simple box animations"></p>
+
+<p>Man I still can&#39;t get over how easy that was. Let&#39;s spice it up a bit by changing our animation to 1) have a delay 2) have a different &quot;animation curve&quot;. Unfamiliar with that? Take a look at our current animation. Notice how the box speeds up and slows down in between each point? Well, look closer, I promise you it does.</p>
+
+<p>The reason this happens is because the default animation curve in iOS is <code>UIViewAnimationOptionCurveEaseInOut</code>. It&#39;s a really nice effect because it simulates how movement often occurs in real life: we don&#39;t just start and stop on a dime, we gradually get up to speed. But for fun, let&#39;s use another curve.</p>
+
+<p>We can change our <code>animateWithDuration:animations:completion:</code> function to it&#39;s more verbose form, <code>animateWithDuration:delay:options:animations:completion:</code> to change add a delay before the animation starts and mess with <code>options</code>. <code>delay</code> takes a value in seconds which will offset the start of our <code>animations:</code> block.</p>
+
+<p><code>options</code> is a bit more complicated. It takes a bit-mask of integers, which are all prefixed with <code>UIViewAnimationOption</code>. You can perform such a bit-mask in Ruby like so: <code>(0 | 1 | 4) == 5</code>. The use case for this is if you want to combine multiple animation options at the same time, like a linear animation curve and automatic animation looping: <code>options: (UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat)</code>.</p>
+
+<p>(there&#39;s also a less verbose form of the <code>UIView.animate...</code> function: <code>animateWithDuration:animations:</code>).</p>
+
+<p>Anyway, let&#39;s do this. Change the <code>animate_to_next_point</code> method to this:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">animate_to_next_point</span>
+  <span class="vi">@current_index</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="vi">@current_index</span> <span class="o">=</span> <span class="vi">@current_index</span> <span class="o">%</span> <span class="vi">@points</span><span class="o">.</span><span class="n">count</span>
+
+  <span class="no">UIView</span><span class="o">.</span><span class="n">animateWithDuration</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">delay</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="no">UIViewAnimationOptionCurveLinear</span><span class="p">,</span>
+    <span class="n">animations</span><span class="p">:</span> <span class="nb">lambda</span> <span class="p">{</span>
+       <span class="vi">@view</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="o">[</span><span class="vi">@points</span><span class="o">[</span><span class="vi">@current_index</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="o">]]</span>
+    <span class="p">},</span> <span class="n">completion</span><span class="ss">:lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">finished</span><span class="o">|</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">animate_to_next_point</span>
+    <span class="p">})</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p><code>rake</code> and check out the new animation.</p>
+
+<p>It <em>looks</em> just like the old one, but its behavior is quite a bit different, no? We now have some time to breath between each new point and the sliding in between is much more mechanical.</p>
+
+<h2 id="toc_18">You Know This Section</h2>
+
+<p>So that covers basic iOS animations. What all did we go over?</p>
+
+<ul>
+<li>Animations work by changing views&#39; properties in the <code>animations:</code> lambda of <code>animateWithDuration:animations:</code> and its variants</li>
+<li>Animations are guided by &quot;animation curves&quot;; examples include UIViewAnimationOptionCurveLinear and UIViewAnimationOptionCurveEaseInOut</li>
+</ul>
+
+<p><a href="/7-models">Do a barrel roll to our next chapter and learn about Models!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+  <script src='http://clayallsopp.github.com/rubymotion-tutorial/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='http://clayallsopp.github.com/rubymotion-tutorial/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>

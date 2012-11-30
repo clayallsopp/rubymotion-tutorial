@@ -1,0 +1,252 @@
+
+<!doctype html>
+  <head>
+    <title> Hello Motion |  RubyMotion Tutorial</title>
+    <meta name="description" content="Learn the installation and project setup of RubyMotion, then make your first iOS app" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="all" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="author" content="Clay Allsopp" />
+
+    <meta property="og:title" content="RubyMotion Tutorial: Write iOS apps in Ruby" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://rubymotion-tutorial.com/" />
+    <meta property="og:image" content="http://i.imgur.com/mndCd.png" />
+    <meta property="og:site_name" content="RubyMotion Tutorial" />
+    <meta property="og:description" content="Learn to write iOS apps in Ruby.">
+    <meta property="fb:admins" content="1398782310" />
+    <meta property="fb:app_id" content="340990539314215" />
+
+    <meta name=viewport content="width=device-width, initial-scale=1.0,maximum-scale = 1.0">
+
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/bootstrap.min.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/bootstrap-responsive.min.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/blog/pygments.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/patch.css'>
+    <link rel=stylesheet href='http://clayallsopp.github.com/rubymotion-tutorial/css/chapter.css'>
+    
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-33404343-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+    <a id="fork-me" href="https://github.com/clayallsopp/rubymotion-tutorial" target="_blank">Fork me on GitHub</a>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2" id="derp">
+            <nav>
+            <ul class="nav nav-list">
+              <li class="nav-header" id="chapter-nav-btn">
+                Chapters <i class="icon-chevron-up" id="chapter-nav-chevron"></i>
+              </li>
+            </ul>
+            <ul class="nav nav-list" id="chapter-nav">
+              
+                <li >
+                  <a href="/0-in-motion">In Motion</a>
+                </li>
+              
+                <li  class="active" >
+                  <a href="/1-hello-motion">Hello Motion</a>
+                </li>
+              
+                <li >
+                  <a href="/2-views">Views</a>
+                </li>
+              
+                <li >
+                  <a href="/3-controllers">Controllers</a>
+                </li>
+              
+                <li >
+                  <a href="/4-containers">Containers</a>
+                </li>
+              
+                <li >
+                  <a href="/5-tables">Tables</a>
+                </li>
+              
+                <li >
+                  <a href="/6-animations">Animations</a>
+                </li>
+              
+                <li >
+                  <a href="/7-models">Models</a>
+                </li>
+              
+                <li >
+                  <a href="/8-testing">Testing</a>
+                </li>
+              
+                <li >
+                  <a href="/9-http">HTTP</a>
+                </li>
+              
+                <li >
+                  <a href="/10-api-driven-example">API Driven Example</a>
+                </li>
+              
+            </ul>
+            <ul class="nav nav-list">
+              <li class="divider"></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="http://github.com/clayallsopp/rubymotion-tutorial">Source</a></li>
+              <li class="divider"></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="span10" id="content">
+          <div id="main">
+            <h1 id="toc_3">Hello Motion</h1>
+
+<h2 id="toc_4">Installation</h2>
+
+<p><a href="http://www.rubymotion.com/">RubyMotion</a> is a commercial product from HipByte, a company founded by the incredible guys responsible for <a href="http://macruby.org/">MacRuby</a>. When you <a href="http://sites.fastspring.com/hipbyte/product/rubymotion">purchase a license</a> to RubyMotion, you will receive a key and an installer app which will take care of everything. You also need to get <a href="http://itunes.apple.com/us/app/xcode/id497799835?mt=12">Xcode</a> from the Mac App Store. Xcode installs some developer tools RubyMotion relies on (such as the iOS Simulator), but you don&#39;t actually make RubyMotion projects inside the IDE.</p>
+
+<p>Instead, RubyMotion relies on command-line tools and you&#39;re welcome to use any text editor of your choice. There are <a href="http://www.rubymotion.com/developer-center/articles/editors/">addons</a> for many popular editors which help with things like code completion and build integration. RubyMotion also builds on top of existing Ruby tools like RubyGems and Rake, so if you&#39;re coming from a Ruby background you should feel right at home.</p>
+
+<p>So once everything is installed, you&#39;re ready to take the dive. Read on!</p>
+
+<h2 id="toc_5">The First App</h2>
+
+<p>Open your terminal and navigate to where you want to create your RubyMotion projects. Run:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="n">motion</span> <span class="n">create</span> <span class="no">HelloMotion</span>
+</code></pre>
+</div>
+
+<p>The <code>motion</code> command is one half of the RubyMotion toolbox; it&#39;s equivalent to the <code>rails</code> command, if you&#39;re familiar with that. It handles managing projects and the RubyMotion tools themselves (from time to time, you may be reminded to run <code>motion update</code>).</p>
+
+<p><code>motion create</code> makes a <code>HelloMotion</code> folder and some files inside, so go ahead and <code>cd</code> into it (<code>cd ./HelloMotion</code>). You&#39;ll run all of the subsequent commands from this location, so definitely keep a terminal window/tab open to it.</p>
+
+<p>We&#39;ll talk about just two of the files it creates: <code>Rakefile</code> and <code>./app/app_delegate.rb</code>.</p>
+
+<p><code>Rakefile</code> is where you handle your app configuation (stuff like what the app&#39;s named, what resources to include, etc) and library imports (so 3rd-party gems or other local sources). It&#39;s used by the other half of the RubyMotion workflow, the <code>rake</code> command. As of RubyMotion 1.11, <code>Rakefile</code> will be generated to look like:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
+
+<span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+  <span class="c1"># Use `rake config&#39; to see complete project settings.</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;HelloMotion&#39;</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>If you&#39;re not intimately familar with Ruby, the first thing you may think is, &quot;Wait...<code>$.unshift</code> who?&quot; Strange-looking indeed. What this line does is tell Ruby, &quot;When we use <code>require</code>s, also look in the &#39;/Library/RubyMotion/lib&#39; directory to find what we&#39;re requiring&quot;. &#39;motion/project&#39; resides there, and without the initial <code>$.unshift</code> nothing would be found!</p>
+
+<p>So we <code>require &#39;motion/project&#39;</code>, which gives us proper access to RubyMotion and setting up our app in the <code>.setup</code> block. There are all sorts of properties for <code>app</code>, which as the auto-generated comment says can be listed using <code>rake config</code>. By default, RubyMotion sets the <code>.name</code> to our project&#39;s name, so that looks good.</p>
+
+<p>Wait, why do we have a <code>Rakefile</code> at all? Well, RubyMotion uses <code>rake</code> for all of its functions, and the <code>rake</code> command runs the <code>Rakefile</code> in directory you run it in. The <code>Rakefile</code> is supposed to define the set of &quot;tasks&quot; which can be attached to rake (<code>rake &lt;task&gt;</code>), but these are actually created for us when we <code>require &quot;motion/project&quot;</code>.</p>
+
+<p>Give it a go! Run <code>rake</code> in your terminal and you should have a blank iPhone simulator pop up. Additionally, your terminal is now running an interactive console in which you can execute new code on the fly.</p>
+
+<p><img src="images/0.png" alt="hello"></p>
+
+<p>&quot;Hooray!&quot; you may exclaim...but how did that happen? How did we get from <code>app.name = &#39;HelloMotion&#39;</code> to an iPhone popping up?</p>
+
+<p>Turns out RubyMotion&#39;s <code>App</code> object has some sensible defaults, such as (most importantly) recursively including all Ruby files in <code>./app</code>. Remember that <code>app_delegate.rb</code> I mentioned earlier? Turns out that guy got included when we compiled our app! Let&#39;s take a look:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">AppDelegate</span>
+  <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+    <span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Hmm, all that did was define an <code>AppDelegate</code> class with one method. There&#39;s not even a superclass, how does this do anything?!</p>
+
+<p>Well, run that <code>rake config</code> command real quick. It&#39;ll spit out a bunch of settings and information, but what we&#39;re interested in is this:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="n">delegate_class</span>         <span class="p">:</span> <span class="s2">&quot;AppDelegate&quot;</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>Whoa buddy, there&#39;s our &quot;unimportant&quot; AppDelegate! RubyMotion actually looks for a class with the name we assign as <code>delegate_class</code> and uses that in launching our app. We could&#39;ve called our class <code>SuperAppDelegate</code> and changed our <code>Rakefile</code> as such:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="no">Motion</span><span class="o">::</span><span class="no">Project</span><span class="o">::</span><span class="no">App</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;HelloMotion&#39;</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">delegate_class</span> <span class="o">=</span> <span class="s2">&quot;SuperAppDelegate&quot;</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>So...what is a delegate? In iOS-land, when the user launches our app the system sets up a bunch of stuff for us. We need to give the OS an object which can respond to different events during that process; we refer to that object as the &quot;application delegate&quot;. It gets callbacks for when the app starts, ends, goes to the background, gets a push notification, all sorts of fun stuff.</p>
+
+<p>In the <code>motion</code> generated code, we only implement <code>def application(application, didFinishLaunchingWithOptions: launchOptions)</code>. It looks a little different than normal Ruby because of the <code>didFinishLaunchingWithOptions</code> label shoved in the middle...what&#39;s up with that? Well, time for a short history lesson.</p>
+
+<p>In most languages, functions look like this: <code>obj.makeBox(origin, size)</code>. This can be a bit of a pain because now you need to look up the implementation of that function and figure out what variables go where. Objective-C uses &quot;named parameters&quot; to solve this problem. In Objective-C, that same function looks like this: <code>[obj makeBoxWithOrigin: origin andSize: size];</code>. See how each variable directly proceeds the part of the function name which refers to it, removing ambiguity? Pretty clever. We refer to those functions by putting colons in place of variable names, like so: <code>makeBoxWithOrigin:andSize:</code>.</p>
+
+<p>In Ruby, named arguments don&#39;t exist; it has traditional methods like <code>obj.make_box(origin, size)</code>. RubyMotion decided to add named arguments to its implementation of Ruby so the original Apple APIs were compatible, like so: <code>obj.makeBox(origin, andSize: size)</code>. That <code>andSize</code> isn&#39;t just sugar; it&#39;s a real part of the method name. <code>obj.call_method(var1, withParam: var2)</code> is totally different than <code>obj.call_method(var1, withMagic: var2)</code>, despite their normal Ruby forms looking like <code>obj.call_method</code>.</p>
+
+<p>Anyway, back to the main plot. <code>application:didFinishLaunchingWithOptions:</code> is called when the system finishes setting up the app and becomes ready for us to do our own setup:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+  <span class="kp">true</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>For now, just assume it will always return <code>true</code>. Some apps may want to use <code>launchOptions</code> to determine if the app should be started or not, but most of the time you won&#39;t do that.</p>
+
+<p>Now we understand how our app boots up and have our entry point. Let&#39;s...do something? Change your <code>application:didFinishLaunchingWithOptions:</code> to look like:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
+  <span class="n">alert</span> <span class="o">=</span> <span class="no">UIAlertView</span><span class="o">.</span><span class="n">new</span>
+  <span class="n">alert</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Hello Motion!&quot;</span>
+  <span class="n">alert</span><span class="o">.</span><span class="n">show</span>
+
+  <span class="nb">puts</span> <span class="s2">&quot;Hello again!&quot;</span>
+
+  <span class="kp">true</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>See what we added? First, those three lines about a <code>UIAlertView</code>. <code>UIAlertView</code>s are the blue popups you see sometimes while using iOS (logging in to the iTunes Store, pre-iOS5 push notifications, etc). We create one, give it a message, then show it.</p>
+
+<p>Next, <code>puts</code> is your basic logging statement. You can pass it a normal string to print, or any normal object which you want to some information about.</p>
+
+<p>Run <code>rake</code> again and...BAM, an unclosable blue popup! And in your terminal window, you should see &quot;Hello again!&quot; output in the console. Not a whole lot going on, but...at least now we know how it all got there.</p>
+
+<p><img src="images/1.png" alt="hello"></p>
+
+<p>What did we learn?</p>
+
+<ul>
+<li>Create RubyMotion apps with <code>motion create &lt;ProjectName&gt;</code></li>
+<li>Configure your app and import libraries inside <code>Rakefile</code></li>
+<li>Apps need a delegate, and RubyMotion needs you to set its value (or use the default) in the <code>Rakefile</code></li>
+<li>App delegates use <code>application:didFinishLaunchingWithOptions:</code> as the first entry point.</li>
+<li>Run your app using <code>rake</code> while inside the project directory.</li>
+</ul>
+
+<p><a href="/2-views">Head to the next chapter and put some Views on the screen!</a></p>
+
+          </div>
+          <hr />
+          <h2>Like it?<small id="spread"> Spread the word</small></h2>
+          <div id="social">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rubymotion-tutorial.com" data-text="RubyMotion Tutorial: Make iOS Apps With Ruby" data-size="large" data-related="clayallsopp" data-count="none">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            <iframe id="facebook-like" src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Frubymotion-tutorial.com&amp;send=false&amp;layout=standard&amp;width=480&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=340990539314215" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+  <script src='http://clayallsopp.github.com/rubymotion-tutorial/js/bootstrap.min.js' type="text/javascript"></script>
+  <script src='http://clayallsopp.github.com/rubymotion-tutorial/js/chapters.js' type="text/javascript"></script>
+  </body>
+</html>
