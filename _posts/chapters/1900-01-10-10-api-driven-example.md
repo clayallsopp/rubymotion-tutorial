@@ -416,7 +416,7 @@ Another`rake` and hey! Some interesting data!
 
 ![color tags in app](images/4.png)
 
-And now one more thing: adding new tags. There are a couple of ways to oragnize this new feature, like `Tag.create(tag)` or magically hack into `color.tags << tag`, but we're going to go with `color.add_tag(tag, &block)`. Why? Because it shows that tags and colors are tightly coupled.
+And now one more thing: adding new tags. There are a couple of ways to organize this new feature, like `Tag.create(tag)` or magically hack into `color.tags << tag`, but we're going to go with `color.add_tag(tag, &block)`. Why? Because it shows that tags and colors are tightly coupled.
 
 Here's what that `add_tag` method looks like:
 
