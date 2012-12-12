@@ -2,50 +2,50 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://rubymotion-tutorial.com/0-in-motion</loc>
-        <lastmod>2012-09-28T10:21:39-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/1-hello-motion</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/2-views</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/3-controllers</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/4-containers</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/5-tables</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/6-animations</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/7-models</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/8-testing</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/9-http</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-09-28T10:21:56-07:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/10-api-driven-example</loc>
-        <lastmod>2012-09-23T21:51:52-07:00</lastmod>
+        <lastmod>2012-11-30T09:18:43-08:00</lastmod>
     </url>
     <url>
         <loc>http://rubymotion-tutorial.com/</loc>
-        <lastmod>2012-09-28T10:21:39-07:00</lastmod>
+        <lastmod>2012-11-30T09:18:43-08:00</lastmod>
     </url>
 </urlset>

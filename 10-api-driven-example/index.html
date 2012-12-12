@@ -500,7 +500,7 @@
 
 <p><img src="images/4.png" alt="color tags in app"></p>
 
-<p>And now one more thing: adding new tags. There are a couple of ways to oragnize this new feature, like <code>Tag.create(tag)</code> or magically hack into <code>color.tags &lt;&lt; tag</code>, but we&#39;re going to go with <code>color.add_tag(tag, &amp;block)</code>. Why? Because it shows that tags and colors are tightly coupled.</p>
+<p>And now one more thing: adding new tags. There are a couple of ways to organize this new feature, like <code>Tag.create(tag)</code> or magically hack into <code>color.tags &lt;&lt; tag</code>, but we&#39;re going to go with <code>color.add_tag(tag, &amp;block)</code>. Why? Because it shows that tags and colors are tightly coupled.</p>
 
 <p>Here&#39;s what that <code>add_tag</code> method looks like:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax">  <span class="k">def</span> <span class="nf">add_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
