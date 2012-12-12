@@ -54,6 +54,20 @@
     margin-bottom: 1.5rem;
 }
 
-#about-me-header {
+#about-me-header, #book-header {
     margin-bottom: 10px;
+}
+
+.well-book p {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.well-book img {
+    border: 1px solid #ccc;
+    float:left; margin-right: 15px;
+}
+
+.well-book img:hover {
+    border: 1px solid #08F;
 }
