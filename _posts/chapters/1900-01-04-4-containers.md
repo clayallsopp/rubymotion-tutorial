@@ -56,8 +56,8 @@ def viewDidLoad
   ...
   self.title = "Tap"
 
-  rightButton = UIBarButtonItem.alloc.initWithTitle("Push", style: UIBarButtonItemStyleBordered, target:self, action:'push')
-  self.navigationItem.rightBarButtonItem = rightButton
+  right_button = UIBarButtonItem.alloc.initWithTitle("Push", style: UIBarButtonItemStyleBordered, target:self, action:'push')
+  self.navigationItem.rightBarButtonItem = right_button
 end
 ```
 
