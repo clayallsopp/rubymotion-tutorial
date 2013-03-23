@@ -29,7 +29,7 @@ The `motion` command is one half of the RubyMotion toolbox; it's equivalent to t
 
 We'll talk about just two of the files it creates: `Rakefile` and `./app/app_delegate.rb`.
 
-`Rakefile` is where you handle your app configuation (stuff like what the app's named, what resources to include, etc) and library imports (so 3rd-party gems or other local sources). It's used by the other half of the RubyMotion workflow, the `rake` command. As of RubyMotion 1.11, `Rakefile` will be generated to look like:
+`Rakefile` is where you handle your app configuration (stuff like what the app's named, what resources to include, etc) and library imports (so 3rd-party gems or other local sources). It's used by the other half of the RubyMotion workflow, the `rake` command. As of RubyMotion 1.11, `Rakefile` will be generated to look like:
 
 ```ruby
 $:.unshift("/Library/RubyMotion/lib")
@@ -41,7 +41,7 @@ Motion::Project::App.setup do |app|
 end
 ```
 
-If you're not intimately familar with Ruby, the first thing you may think is, "Wait...`$.unshift` who?" Strange-looking indeed. What this line does is tell Ruby, "When we use `require`s, also look in the '/Library/RubyMotion/lib' directory to find what we're requiring". 'motion/project' resides there, and without the initial `$.unshift` nothing would be found!
+If you're not intimately familiar with Ruby, the first thing you may think is, "Wait...`$.unshift` who?" Strange-looking indeed. What this line does is tell Ruby, "When we use `require`s, also look in the '/Library/RubyMotion/lib' directory to find what we're requiring". 'motion/project' resides there, and without the initial `$.unshift` nothing would be found!
 
 So we `require 'motion/project'`, which gives us proper access to RubyMotion and setting up our app in the `.setup` block. There are all sorts of properties for `app`, which as the auto-generated comment says can be listed using `rake config`. By default, RubyMotion sets the `.name` to our project's name, so that looks good.
 
