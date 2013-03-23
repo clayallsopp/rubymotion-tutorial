@@ -16,7 +16,7 @@ So, what are controllers? They're objects which act as a "layer" between models 
 
 That sounds kind of "big picture", but there are some really practical reasons for controllers:
 
-- **View reuse**. Let's say we have a `PostView` which displays all the information about a `Post` (its content, author, "Likes", etc). We want to use this view on a couple of different screens, such as a main feed and a user's profile feed. To stay reuseable, the `PostView` shouldn't deal with *how* it gets the information; instead, its controller should take care of that and then pass the processed data on to the view.
+- **View reuse**. Let's say we have a `PostView` which displays all the information about a `Post` (its content, author, "Likes", etc). We want to use this view on a couple of different screens, such as a main feed and a user's profile feed. To stay reusable, the `PostView` shouldn't deal with *how* it gets the information; instead, its controller should take care of that and then pass the processed data on to the view.
 - **Presentation management**. Sometimes we want a view to take up the entire screen, other times we want the same thing to appear in a modal box (think iPad vs iPhone). It doesn't make sense to write two identical view classes that differ only in presentation style, so we use the controllers to resize and animate our views accordingly.
 
 There's nothing technically stopping you from doing those things inside models and views, but it makes your code much more robust and easier to manage if you embrace MVC.
