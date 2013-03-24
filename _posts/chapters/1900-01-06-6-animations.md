@@ -80,7 +80,7 @@ Man I still can't get over how easy that was. Let's spice it up a bit by changin
 
 The reason this happens is because the default animation curve in iOS is `UIViewAnimationOptionCurveEaseInOut`. It's a really nice effect because it simulates how movement often occurs in real life: we don't just start and stop on a dime, we gradually get up to speed. But for fun, let's use another curve.
 
-We can change our `animateWithDuration:animations:completion:` function to it's more verbose form, `animateWithDuration:delay:options:animations:completion:` to change add a delay before the animation starts and mess with `options`. `delay` takes a value in seconds which will offset the start of our `animations:` block.
+We can change our `animateWithDuration:animations:completion:` function to its more verbose form, `animateWithDuration:delay:options:animations:completion:` to change add a delay before the animation starts and mess with `options`. `delay` takes a value in seconds which will offset the start of our `animations:` block.
 
 `options` is a bit more complicated. It takes a bit-mask of integers, which are all prefixed with `UIViewAnimationOption`. You can perform such a bit-mask in Ruby like so: `(0 | 1 | 4) == 5`. The use case for this is if you want to combine multiple animation options at the same time, like a linear animation curve and automatic animation looping: `options: (UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat)`.
 
