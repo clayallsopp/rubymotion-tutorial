@@ -1,4 +1,3 @@
-
 <!doctype html>
   <head>
     <title> Hello Motion |  RubyMotion Tutorial</title>
@@ -143,7 +142,7 @@
 </code></pre>
 </div>
 
-<p>If you&#39;re not intimately familar with Ruby, the first thing you may think is, &quot;Wait...<code>$.unshift</code> who?&quot; Strange-looking indeed. What this line does is tell Ruby, &quot;When we use <code>require</code>s, also look in the &#39;/Library/RubyMotion/lib&#39; directory to find what we&#39;re requiring&quot;. &#39;motion/project&#39; resides there, and without the initial <code>$.unshift</code> nothing would be found!</p>
+<p>If you&#39;re not intimately familar with Ruby, the first thing you may think is, &quot;Wait...<code>$:.unshift</code> who?&quot; Strange-looking indeed. What this line does is tell Ruby, &quot;When we use <code>require</code>s, also look in the &#39;/Library/RubyMotion/lib&#39; directory to find what we&#39;re requiring&quot;. &#39;motion/project&#39; resides there, and without the initial <code>$:.unshift</code> nothing would be found!</p>
 
 <p>So we <code>require &#39;motion/project&#39;</code>, which gives us proper access to RubyMotion and setting up our app in the <code>.setup</code> block. There are all sorts of properties for <code>app</code>, which as the auto-generated comment says can be listed using <code>rake config</code>. By default, RubyMotion sets the <code>.name</code> to our project&#39;s name, so that looks good.</p>
 
