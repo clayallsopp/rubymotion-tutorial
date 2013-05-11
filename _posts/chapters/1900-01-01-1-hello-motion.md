@@ -41,7 +41,7 @@ Motion::Project::App.setup do |app|
 end
 ```
 
-If you're not intimately familiar with Ruby, the first thing you may think is, "Wait...`$.unshift` who?" Strange-looking indeed. What this line does is tell Ruby, "When we use `require`s, also look in the '/Library/RubyMotion/lib' directory to find what we're requiring". 'motion/project' resides there, and without the initial `$.unshift` nothing would be found!
+If you're not intimately familiar with Ruby, the first thing you may think is, "Wait...`$:.unshift` who?" Strange-looking indeed. What this line does is tell Ruby, "When we use `require`s, also look in the '/Library/RubyMotion/lib' directory to find what we're requiring". 'motion/project' resides there, and without the initial `$:.unshift` nothing would be found!
 
 So we `require 'motion/project'`, which gives us proper access to RubyMotion and setting up our app in the `.setup` block. There are all sorts of properties for `app`, which as the auto-generated comment says can be listed using `rake config`. By default, RubyMotion sets the `.name` to our project's name, so that looks good.
 
