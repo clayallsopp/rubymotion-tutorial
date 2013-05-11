@@ -181,7 +181,7 @@
 
 <p>The reason this happens is because the default animation curve in iOS is <code>UIViewAnimationOptionCurveEaseInOut</code>. It&#39;s a really nice effect because it simulates how movement often occurs in real life: we don&#39;t just start and stop on a dime, we gradually get up to speed. But for fun, let&#39;s use another curve.</p>
 
-<p>We can change our <code>animateWithDuration:animations:completion:</code> function to it&#39;s more verbose form, <code>animateWithDuration:delay:options:animations:completion:</code> to change add a delay before the animation starts and mess with <code>options</code>. <code>delay</code> takes a value in seconds which will offset the start of our <code>animations:</code> block.</p>
+<p>We can change our <code>animateWithDuration:animations:completion:</code> function to its more verbose form, <code>animateWithDuration:delay:options:animations:completion:</code> to change add a delay before the animation starts and mess with <code>options</code>. <code>delay</code> takes a value in seconds which will offset the start of our <code>animations:</code> block.</p>
 
 <p><code>options</code> is a bit more complicated. It takes a bit-mask of integers, which are all prefixed with <code>UIViewAnimationOption</code>. You can perform such a bit-mask in Ruby like so: <code>(0 | 1 | 4) == 5</code>. The use case for this is if you want to combine multiple animation options at the same time, like a linear animation curve and automatic animation looping: <code>options: (UIViewAnimationOptionCurveLinear | UIViewAnimationOptionRepeat)</code>.</p>
 

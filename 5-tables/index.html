@@ -207,7 +207,7 @@
 </code></pre>
 </div>
 
-<p>Wait, what&#39;s this <code>reuseIdentifier</code> business? Well, <code>UITableView</code> does its &quot;reuse&quot; magic by giving an identifier to each type of cell used in the table. When you grab a cell for reuse, you actually grab them from a pool of cells with the same identifier. So, if for some reason you had a unique identifier for every row, none of the cells could get reused because there would only ever been one cell in each pool. If you had two visually distinct and totally different types of rows, you would probably have two identifiers. Sound reasonable?</p>
+<p>Wait, what&#39;s this <code>reuseIdentifier</code> business? Well, <code>UITableView</code> does its &quot;reuse&quot; magic by giving an identifier to each type of cell used in the table. When you grab a cell for reuse, you actually grab them from a pool of cells with the same identifier. So, if for some reason you had a unique identifier for every row, none of the cells could get reused because there would only ever be one cell in each pool. If you had two visually distinct and totally different types of rows, you would probably have two identifiers. Sound reasonable?</p>
 
 <p>You might not be familiar with the <code>||=</code> operator. In Ruby, <code>a ||= b</code> means &quot;if <code>a</code> is nil/false, then assign it the value of <code>b</code>&quot;. It&#39;s a good way to give a default value to an object, or ensure that it&#39;s only assigned once, as in the example above.</p>
 

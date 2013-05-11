@@ -142,7 +142,7 @@
 
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">{})</span>
     <span class="n">attributes</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span>
-      <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2">=&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">member?</span> <span class="n">key<span class="o">.</span><span class="n">to_sym</span></span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2">=&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="no">PROPERTIES</span><span class="o">.</span><span class="n">member?</span> <span class="n">key</span>
     <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -263,7 +263,7 @@
 
 <p><a href="http://bubblewrap.io/">BubbleWrap</a> is a collection of idiomatic Ruby wrappers for the iOS SDK. A lot of Apple&#39;s APIs use a system of calling pre-established methods on a callback object. This is preferable on Objective-C but not so much in Ruby, where there have always been anonymous functions to pass around. Thus, many of BubbleWrap&#39;s wrappers are just moving such callback method into inline <code>lambda</code>s and <code>block</code>s. It uses such a wrapper to make Key-Value Observing really simple.</p>
 
-<p>How do we install third-party libraries in RubyMotion? Well, we can either clone the repo and add it to our directory structure, or we can use <a href="http://rubygems.org/pages/download">RubyGems</a>. The latter makes third-party code much easier to install and maintain, so I always reccomend checking if a new RubyMotion library can be installed as a gem (and if it isn&#39;t, then fork and fix it!)</p>
+<p>How do we install third-party libraries in RubyMotion? Well, we can either clone the repo and add it to our directory structure, or we can use <a href="http://rubygems.org/pages/download">RubyGems</a>. The latter makes third-party code much easier to install and maintain, so I always recommend checking if a new RubyMotion library can be installed as a gem (and if it isn&#39;t, then fork and fix it!)</p>
 
 <p>In your terminal, run <code>gem install bubble-wrap</code>. This will install BubbleWrap to your computer like any other gem; however, an error will be thrown if you try to <code>require &quot;bubble-wrap&quot;</code> in a non-RubyMotion project.</p>
 
@@ -367,7 +367,7 @@
 <ul>
 <li>Models are plain Ruby objects; add properties to them using the <code>attr_[accessor/reader/writer]</code> methods</li>
 <li>Use a constant like <code>PROPERTIES</code> to define your attributes, it makes loading from a hash in <code>initialize</code> really easy.</li>
-<li><code>NSUserDefaults</code> is a persistant store for primitives; use <code>NSKeyedArchiver</code> and <code>NSKeyedUnarchiver</code> to store your models. This requires you to implement <code>initWithCoder:</code> and <code>encodeWithCoder:</code> in your class.</li>
+<li><code>NSUserDefaults</code> is a persistent store for primitives; use <code>NSKeyedArchiver</code> and <code>NSKeyedUnarchiver</code> to store your models. This requires you to implement <code>initWithCoder:</code> and <code>encodeWithCoder:</code> in your class.</li>
 <li>Key-Value Observing lets your objects get notified of changes in another object&#39;s properties.</li>
 <li><code>include BW::KVO</code> and use the <code>observe</code> function for simple Key-Value Observing.</li>
 </ul>

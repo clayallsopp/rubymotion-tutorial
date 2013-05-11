@@ -1,3 +1,4 @@
+
 <!doctype html>
   <head>
     <title> Controllers |  RubyMotion Tutorial</title>
@@ -119,7 +120,7 @@
 <p>That sounds kind of &quot;big picture&quot;, but there are some really practical reasons for controllers:</p>
 
 <ul>
-<li><strong>View reuse</strong>. Let&#39;s say we have a <code>PostView</code> which displays all the information about a <code>Post</code> (its content, author, &quot;Likes&quot;, etc). We want to use this view on a couple of different screens, such as a main feed and a user&#39;s profile feed. To stay reuseable, the <code>PostView</code> shouldn&#39;t deal with <em>how</em> it gets the information; instead, its controller should take care of that and then pass the processed data on to the view.</li>
+<li><strong>View reuse</strong>. Let&#39;s say we have a <code>PostView</code> which displays all the information about a <code>Post</code> (its content, author, &quot;Likes&quot;, etc). We want to use this view on a couple of different screens, such as a main feed and a user&#39;s profile feed. To stay reusable, the <code>PostView</code> shouldn&#39;t deal with <em>how</em> it gets the information; instead, its controller should take care of that and then pass the processed data on to the view.</li>
 <li><strong>Presentation management</strong>. Sometimes we want a view to take up the entire screen, other times we want the same thing to appear in a modal box (think iPad vs iPhone). It doesn&#39;t make sense to write two identical view classes that differ only in presentation style, so we use the controllers to resize and animate our views accordingly.</li>
 </ul>
 
@@ -208,7 +209,7 @@
 <ul>
 <li>The iOS SDK uses the Model-View-Controller paradigm.</li>
 <li><code>UIViewController</code> makes up the controller part of that, and it should be subclassed for customization.</li>
-<li>Use <code>viewDidLoad</code> to setup your controller and <em>don&#39;t forget to call *super</em>.</li>
+<li>Use <code>viewDidLoad</code> when to setup your controller and <em>don&#39;t forget to call *super</em>.</li>
 <li><code>UIWindow</code>s have a <code>rootViewController</code> property for displaying controllers.</li>
 </ul>
 

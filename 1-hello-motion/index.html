@@ -1,3 +1,4 @@
+
 <!doctype html>
   <head>
     <title> Hello Motion |  RubyMotion Tutorial</title>
@@ -131,7 +132,7 @@
 
 <p>We&#39;ll talk about just two of the files it creates: <code>Rakefile</code> and <code>./app/app_delegate.rb</code>.</p>
 
-<p><code>Rakefile</code> is where you handle your app configuation (stuff like what the app&#39;s named, what resources to include, etc) and library imports (so 3rd-party gems or other local sources). It&#39;s used by the other half of the RubyMotion workflow, the <code>rake</code> command. As of RubyMotion 1.11, <code>Rakefile</code> will be generated to look like:</p>
+<p><code>Rakefile</code> is where you handle your app configuration (stuff like what the app&#39;s named, what resources to include, etc) and library imports (so 3rd-party gems or other local sources). It&#39;s used by the other half of the RubyMotion workflow, the <code>rake</code> command. As of RubyMotion 1.11, <code>Rakefile</code> will be generated to look like:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="s2">&quot;/Library/RubyMotion/lib&quot;</span><span class="p">)</span>
 <span class="nb">require</span> <span class="s1">&#39;motion/project&#39;</span>
 
@@ -142,7 +143,7 @@
 </code></pre>
 </div>
 
-<p>If you&#39;re not intimately familar with Ruby, the first thing you may think is, &quot;Wait...<code>$:.unshift</code> who?&quot; Strange-looking indeed. What this line does is tell Ruby, &quot;When we use <code>require</code>s, also look in the &#39;/Library/RubyMotion/lib&#39; directory to find what we&#39;re requiring&quot;. &#39;motion/project&#39; resides there, and without the initial <code>$:.unshift</code> nothing would be found!</p>
+<p>If you&#39;re not intimately familiar with Ruby, the first thing you may think is, &quot;Wait...<code>$:.unshift</code> who?&quot; Strange-looking indeed. What this line does is tell Ruby, &quot;When we use <code>require</code>s, also look in the &#39;/Library/RubyMotion/lib&#39; directory to find what we&#39;re requiring&quot;. &#39;motion/project&#39; resides there, and without the initial <code>$:.unshift</code> nothing would be found!</p>
 
 <p>So we <code>require &#39;motion/project&#39;</code>, which gives us proper access to RubyMotion and setting up our app in the <code>.setup</code> block. There are all sorts of properties for <code>app</code>, which as the auto-generated comment says can be listed using <code>rake config</code>. By default, RubyMotion sets the <code>.name</code> to our project&#39;s name, so that looks good.</p>
 
@@ -186,7 +187,7 @@
 
 <p>In most languages, functions look like this: <code>obj.makeBox(origin, size)</code>. This can be a bit of a pain because now you need to look up the implementation of that function and figure out what variables go where. Objective-C uses &quot;named parameters&quot; to solve this problem. In Objective-C, that same function looks like this: <code>[obj makeBoxWithOrigin: origin andSize: size];</code>. See how each variable directly proceeds the part of the function name which refers to it, removing ambiguity? Pretty clever. We refer to those functions by putting colons in place of variable names, like so: <code>makeBoxWithOrigin:andSize:</code>.</p>
 
-<p>In Ruby, named arguments don&#39;t exist; it has traditional methods like <code>obj.make_box(origin, size)</code>. RubyMotion decided to add named arguments to its implementation of Ruby so the original Apple APIs were compatible, like so: <code>obj.makeBox(origin, andSize: size)</code>. That <code>andSize</code> isn&#39;t just sugar; it&#39;s a real part of the method name. <code>obj.call_method(var1, withParam: var2)</code> is totally different than <code>obj.call_method(var1, withMagic: var2)</code>, despite their normal Ruby forms looking like <code>obj.call_method</code>.</p>
+<p>In Ruby, named arguments don&#39;t exist; it has traditional methods like <code>obj.make_box(origin, size)</code>. RubyMotion decided to add named arguments to its implementation of Ruby so the original Apple APIs were compatible, like so: <code>obj.makeBox(origin, andSize: size)</code>. That <code>andSize</code> isn&#39;t just sugar; it&#39;s a real part of the method name. <code>obj.call_method(var1, withParam: var2)</code> is totally different than <code>obj.call_method(var1, withMagic: var2)</code>, despite their normal Ruby forms looking like <code>obj.call_method</code>. [Named arguments <em>do</em> exist in Ruby 2.0, but RubyMotion is currently compatible with Ruby 1.9.3]</p>
 
 <p>Anyway, back to the main plot. <code>application:didFinishLaunchingWithOptions:</code> is called when the system finishes setting up the app and becomes ready for us to do our own setup:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span><span class="ss">:launchOptions</span><span class="p">)</span>
