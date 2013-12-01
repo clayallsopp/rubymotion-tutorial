@@ -335,10 +335,8 @@ Next, let's layout our interface:
 
     self.title = self.color.hex
     
-	# Only needed if you use iOS7. This will prevent the info_container from being hidden under
-    # the NavigationController's buttons.
-    #
-	# self.edgesForExtendedLayout = UIRectEdgeNone
+    # You must comment out the following line if you are developing on iOS < 7.
+    self.edgesForExtendedLayout = UIRectEdgeNone
 	
     # A light grey background to separate the Tag table from the Color info
     @info_container = UIView.alloc.initWithFrame [[0, 0], [self.view.frame.size.width, 110]]
