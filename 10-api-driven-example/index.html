@@ -314,7 +314,7 @@
 
 <p>The <code>when</code> function is available to every <code>UIControl</code> subclass (of which <code>UIButton</code> is one) and takes the usual bitmask of <code>UIControlEvent</code>s as its arguments. While the request runs, we temporarily disable our UI elements.</p>
 
-<p>But wait...what&#39;s that <code>Color.find</code> method? Well, it&#39;s a good idea to keep all of your URL requests inside of models instead of controllers. That way if we want to get a <code>Color</code> from the server somewhere else in the app then there&#39;s no code duplication. Who knows, maybe we&#39;ll need that too...*foreshadowing*</p>
+<p>But wait...what&#39;s that <code>Color.find</code> method? Well, it&#39;s a good idea to keep all of your URL requests inside of models instead of controllers. That way if we want to get a <code>Color</code> from the server somewhere else in the app then there&#39;s no code duplication. Who knows, maybe we&#39;ll need that too...<em>foreshadowing</em></p>
 
 <p>So in your <code>Color</code> class, add the <code>find</code> static method:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">Color</span>
@@ -418,6 +418,9 @@
     <span class="k">super</span>
 
     <span class="nb">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">hex</span>
+
+    <span class="c1"># You must comment out the following line if you are developing on iOS &lt; 7.</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">edgesForExtendedLayout</span> <span class="o">=</span> <span class="no">UIRectEdgeNone</span>
 
     <span class="c1"># A light grey background to separate the Tag table from the Color info</span>
     <span class="vi">@info_container</span> <span class="o">=</span> <span class="no">UIView</span><span class="o">.</span><span class="n">alloc</span><span class="o">.</span><span class="n">initWithFrame</span> <span class="o">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="nb">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">110</span><span class="o">]]</span>
