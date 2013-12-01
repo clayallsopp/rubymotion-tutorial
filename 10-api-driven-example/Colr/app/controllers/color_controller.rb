@@ -11,6 +11,9 @@ class ColorController < UIViewController
     super
 
     self.title = self.color.hex
+    
+    # You must comment out the following line if you are developing on iOS < 7.
+    self.edgesForExtendedLayout = UIRectEdgeNone
 
     # A light grey background to separate the Tag table from the Color info
     @info_container = UIView.alloc.initWithFrame [[0, 0], [self.view.frame.size.width, 110]]
