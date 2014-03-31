@@ -63,7 +63,7 @@ end
 
 Should be pretty plain what this does. We create a `UIBarButtonItem` instance with a title and a style. The `style` property determines how our button looks (either plain, bordered, or "done"; play around to see the differences). We then set it as our controller's `navigationItem`'s `rightBarButtonItem`. Every `UIViewController` has a `navigationItem`, which is how we access the information displayed in the blue bar at the top. (NOTE that `UINavigationItem` *isn't* a `UIView`! so you can't arbitrarily add subviews to it).
 
-What's the `target`/`action` business? Well, this is where the original Objective-C SDK leaks into Ruby-land =(. Up until very recently, you couldn't pass anonymous functions as callbacks in Objecive-C; as an alternative, APIs would pass objects and the name of a function to call on that object. We `do` this operation in Ruby with blocks and lambdas, but sadly the older iOS APIs show their age.
+What's the `target`/`action` business? Well, this is where the original Objective-C SDK leaks into Ruby-land =(. Up until very recently, you couldn't pass anonymous functions as callbacks in Objective-C; as an alternative, APIs would pass objects and the name of a function to call on that object. We `do` this operation in Ruby with blocks and lambdas, but sadly the older iOS APIs show their age.
 
 Anyway, `target` is the object you want to call the `action` function on. Let's implement it in our `TapController` so you get a better idea:
 
