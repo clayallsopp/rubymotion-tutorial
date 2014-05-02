@@ -276,6 +276,16 @@
 </code></pre>
 </div>
 
+<p>Alternatively, you could simply add it to your <code>./Gemfile</code>:</p>
+<div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="n">gem</span> <span class="s1">&#39;rake&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;bubble-wrap&#39;</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</code></pre>
+</div>
+
+<p>...and then run <code>bundle install</code> from your terminal. </p>
+
 <p>Now to the real code. In <code>user.rb</code>, you can either use the robust, API-friendly <code>User</code> class outlined above or use the more concise (but still workable) version:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">User</span>
   <span class="kp">attr_accessor</span> <span class="ss">:id</span>
