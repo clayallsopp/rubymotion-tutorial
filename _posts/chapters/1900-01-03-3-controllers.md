@@ -26,7 +26,7 @@ In iOS-land, controllers are `UIViewController`s. They come with one `view` prop
 So now that we know what a controller is and what it should do, what *shouldn't* it do?
 
 - Directly query or save data. It's tempting to send a bunch of HTTP requests in a controller, but those are best left to your models.
-- Complex view layouts. If you're directly adding subviews more then one level "deep" to your controller's `view`, you should rewrite your views to do it themselves. As a good rule of thumb, the only `addSubview` you should see in your controller is `self.view.addSubview`.
+- Complex view layouts. If you're directly adding subviews more than one level "deep" to your controller's `view`, you should rewrite your views to do it themselves. As a good rule of thumb, the only `addSubview` you should see in your controller is `self.view.addSubview`.
 
 OK that's enough exposition, time for the Michael Bay action sequences.
 
