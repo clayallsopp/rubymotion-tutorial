@@ -261,7 +261,7 @@
 
 <p>There&#39;s one more thing you need to do: use BubbleWrap.</p>
 
-<p><a href="http://bubblewrap.io/">BubbleWrap</a> is a collection of idiomatic Ruby wrappers for the iOS SDK. A lot of Apple&#39;s APIs use a system of calling pre-established methods on a callback object. This is preferable on Objective-C but not so much in Ruby, where there have always been anonymous functions to pass around. Thus, many of BubbleWrap&#39;s wrappers are just moving such callback method into inline <code>lambda</code>s and <code>block</code>s. It uses such a wrapper to make Key-Value Observing really simple.</p>
+<p><a href="http://rubymotion.github.io/BubbleWrap/">BubbleWrap</a> is a collection of idiomatic Ruby wrappers for the iOS SDK. A lot of Apple&#39;s APIs use a system of calling pre-established methods on a callback object. This is preferable on Objective-C but not so much in Ruby, where there have always been anonymous functions to pass around. Thus, many of BubbleWrap&#39;s wrappers are just moving such callback method into inline <code>lambda</code>s and <code>block</code>s. It uses such a wrapper to make Key-Value Observing really simple.</p>
 
 <p>How do we install third-party libraries in RubyMotion? Well, we can either clone the repo and add it to our directory structure, or we can use <a href="http://rubygems.org/pages/download">RubyGems</a>. The latter makes third-party code much easier to install and maintain, so I always recommend checking if a new RubyMotion library can be installed as a gem (and if it isn&#39;t, then fork and fix it!)</p>
 
@@ -284,7 +284,7 @@
 </code></pre>
 </div>
 
-<p>...and then run <code>bundle install</code> from your terminal. </p>
+<p>...and then run <code>bundle install</code> from your terminal.</p>
 
 <p>Now to the real code. In <code>user.rb</code>, you can either use the robust, API-friendly <code>User</code> class outlined above or use the more concise (but still workable) version:</p>
 <div class="highlight"><pre class='codehilite'><code class="ruby syntax"><span class="k">class</span> <span class="nc">User</span>
